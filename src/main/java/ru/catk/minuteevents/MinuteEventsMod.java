@@ -41,6 +41,8 @@ public final class MinuteEventsMod implements ModInitializer {
     private int intervalSeconds = DEFAULT_INTERVAL_SECONDS;
     private int elapsedTicks;
     private int timerSyncTicks;
+    private boolean previewMode = false;
+    private final Map<UUID, MinuteEvent> upcomingEvents = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
     private Path configPath;
     private final EnumMap<EventCategory, Boolean> categoryEnabled = defaultCategoryEnabled();
@@ -72,7 +74,7 @@ public final class MinuteEventsMod implements ModInitializer {
                 int remaining = Math.max(0, intervalSeconds - elapsedTicks / TICKS_PER_SECOND);
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (ServerPlayNetworking.canSend(player, EventTimerPayload.TYPE)) {
-                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining));
+                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining, timerDisplayFor(player)));
                     }
                 }
             }
@@ -89,6 +91,12 @@ public final class MinuteEventsMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
             dispatcher.register(Commands.literal("minuteevent")
                 .executes(context -> showStatus(context.getSource()))
+                .then(Commands.literal("mode")
+                    .requires(source -> source.hasPermission(2))
+                    .then(Commands.literal("preview")
+                        .executes(context -> setPreviewMode(context.getSource(), true)))
+                    .then(Commands.literal("chance")
+                        .executes(context -> setPreviewMode(context.getSource(), false))))
                 .then(Commands.literal("status")
                     .executes(context -> showStatus(context.getSource())))
                 .then(Commands.literal("on")
@@ -136,6 +144,35 @@ public final class MinuteEventsMod implements ModInitializer {
         );
     }
 
+    private int setPreviewMode(CommandSourceStack source, boolean value) {
+        previewMode = value;
+        upcomingEvents.clear();
+        source.sendSuccess(() -> Component.literal(value
+            ? "Режим предпросмотра включён: таймер показывает следующее событие."
+            : "Обычный режим включён: отображаются проценты шанса категорий."), true);
+        return 1;
+    }
+
+    private String timerDisplayFor(ServerPlayer player) {
+        if (previewMode) {
+            MinuteEvent event = upcomingEvents.computeIfAbsent(player.getUUID(), ignored -> {
+                int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
+                return streak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
+            });
+            return "Будет: " + event.displayName();
+        }
+        return "Шансы: " + categoryChanceSummary();
+    }
+
+    private String categoryChanceSummary() {
+        StringBuilder text = new StringBuilder();
+        for (EventCategory category : EventCategory.configurableValues()) {
+            if (text.length() > 0) text.append(" | ");
+            text.append(category.displayName()).append(" ").append(categoryChances.get(category)).append("%");
+        }
+        return text.toString();
+    }
+
     private int showStatus(CommandSourceStack source) {
         String status = enabled ? "включены" : "выключены";
         int remaining = Math.max(0, intervalSeconds * TICKS_PER_SECOND - elapsedTicks)
@@ -143,6 +180,7 @@ public final class MinuteEventsMod implements ModInitializer {
         source.sendSuccess(
             () -> Component.literal("Минутные события " + status
                 + ". Интервал: " + intervalSeconds + " сек. До следующего: " + remaining + " сек."
+                + " Режим: " + (previewMode ? "предпросмотр" : "проценты")
                 + " Категории: " + categoryStatus()),
             false
         );
@@ -250,7 +288,8 @@ public final class MinuteEventsMod implements ModInitializer {
                 event = MinuteEvent.randomGoodEvent();
                 badEventStreaks.put(player.getUUID(), 0);
             } else {
-                event = selectEvent();
+                event = upcomingEvents.remove(player.getUUID());
+                if (event == null) event = selectEvent();
             }
             String description = event.apply(player);
             if (event.isGood()) {
