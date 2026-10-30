@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "minute_events",
+  "version": "${version}",
+  "name": "Минутные события: CHAOS EDITION",
+  "description": "Chaos Edition: более 100 случайных событий — катастрофы, монстры, ловушки и награды.",
+  "authors": ["Replit Agent"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ru.catk.minuteevents.MinuteEventsMod"
+    ],
+    "client": [
+      "ru.catk.minuteevents.MinuteEventsClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
