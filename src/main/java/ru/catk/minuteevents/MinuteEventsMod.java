@@ -282,14 +282,12 @@ public final class MinuteEventsMod implements ModInitializer {
 
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            MinuteEvent event;
+            MinuteEvent event = previewMode ? upcomingEvents.remove(player.getUUID()) : null;
             int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
             if (badStreak >= 3) {
-                event = MinuteEvent.randomGoodEvent();
-                badEventStreaks.put(player.getUUID(), 0);
-            } else {
-                event = upcomingEvents.remove(player.getUUID());
-                if (event == null) event = selectEvent();
+                if (event == null || !event.isGood()) event = MinuteEvent.randomGoodEvent();
+            } else if (event == null) {
+                event = selectEvent();
             }
             String description = event.apply(player);
             if (event.isGood()) {
