@@ -94,7 +94,6 @@ public final class MinuteEventsMod implements ModInitializer {
             dispatcher.register(Commands.literal("minuteevent")
                 .executes(context -> showStatus(context.getSource()))
                 .then(Commands.literal("mode")
-                    .requires(source -> source.hasPermission(2))
                     .then(Commands.literal("preview")
                         .executes(context -> setPreviewMode(context.getSource(), true)))
                     .then(Commands.literal("chance")
@@ -102,7 +101,6 @@ public final class MinuteEventsMod implements ModInitializer {
                     .then(Commands.literal("blind")
                         .executes(context -> setDisplayMode(context.getSource(), "blind"))))
                 .then(Commands.literal("timer")
-                    .requires(source -> source.hasPermission(2))
                     .then(Commands.literal("on")
                         .executes(context -> setTimerVisible(context.getSource(), true)))
                     .then(Commands.literal("off")
@@ -112,16 +110,12 @@ public final class MinuteEventsMod implements ModInitializer {
                 .then(Commands.literal("chances")
                     .executes(context -> showEventChances(context.getSource())))
                 .then(Commands.literal("on")
-                    .requires(source -> source.hasPermission(2))
                     .executes(context -> setEnabled(context.getSource(), true)))
                 .then(Commands.literal("off")
-                    .requires(source -> source.hasPermission(2))
                     .executes(context -> setEnabled(context.getSource(), false)))
                 .then(Commands.literal("now")
-                    .requires(source -> source.hasPermission(2))
                     .executes(context -> triggerNow(context.getSource())))
                 .then(Commands.literal("interval")
-                    .requires(source -> source.hasPermission(2))
                     .then(Commands.argument("секунды",
                             IntegerArgumentType.integer(MIN_INTERVAL_SECONDS, MAX_INTERVAL_SECONDS))
                         .executes(context -> setInterval(
@@ -129,7 +123,6 @@ public final class MinuteEventsMod implements ModInitializer {
                             IntegerArgumentType.getInteger(context, "секунды")
                         ))))
                 .then(Commands.literal("category")
-                    .requires(source -> source.hasPermission(2))
                     .then(Commands.argument("category", StringArgumentType.word())
                         .then(Commands.literal("on")
                             .executes(context -> setCategoryEnabled(
@@ -144,7 +137,6 @@ public final class MinuteEventsMod implements ModInitializer {
                                 false
                             )))))
                 .then(Commands.literal("chance")
-                    .requires(source -> source.hasPermission(2))
                     .then(Commands.argument("category", StringArgumentType.word())
                         .then(Commands.argument("percent", IntegerArgumentType.integer(0, 100))
                             .executes(context -> setCategoryChance(
