@@ -823,11 +823,11 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_001(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 3, 6, 9, 15); return removed > 0 ? "Катастрофа #1: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #1: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 33); return removed > 0 ? "Катастрофа #1: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #1: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_002(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 8, 4, 11); return "Катастрофа #2: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #2: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_003(EventCategory.CAGES) {
         @Override
@@ -839,15 +839,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_005(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #5: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #5: вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_006(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 5, 14, 20); return removed > 0 ? "Катастрофа #6: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #6: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 44); return removed > 0 ? "Катастрофа #6: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #6: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_007(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 13, 4, 11); return "Катастрофа #7: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #7: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_008(EventCategory.CAGES) {
         @Override
@@ -859,15 +859,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_010(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 8, 0)); return "Катастрофа #10: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #10: ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_011(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 11, 25); return removed > 0 ? "Катастрофа #11: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #11: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 55); return removed > 0 ? "Катастрофа #11: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #11: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_012(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 9, 4, 11); return "Катастрофа #12: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "Катастрофа #12: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_013(EventCategory.CAGES) {
         @Override
@@ -879,15 +879,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_015(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 18, 1)); return "Катастрофа #15: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #15: внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_016(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 2, 9, 8, 18); return removed > 0 ? "Катастрофа #16: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #16: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 40); return removed > 0 ? "Катастрофа #16: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #16: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_017(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 14, 4, 11); return "Катастрофа #17: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #17: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_018(EventCategory.CAGES) {
         @Override
@@ -899,15 +899,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_020(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #20: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #20: земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_021(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 3, 8, 13, 23); return removed > 0 ? "Катастрофа #21: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #21: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 51); return removed > 0 ? "Катастрофа #21: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #21: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_022(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 10, 4, 11); return "Катастрофа #22: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "Катастрофа #22: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_023(EventCategory.CAGES) {
         @Override
@@ -919,15 +919,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_025(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 12, 0)); return "Катастрофа #25: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #25: внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_026(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 7, 10, 16); return removed > 0 ? "Катастрофа #26: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #26: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 35); return removed > 0 ? "Катастрофа #26: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #26: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_027(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 6, 4, 11); return "Катастрофа #27: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #27: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_028(EventCategory.CAGES) {
         @Override
@@ -939,15 +939,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_030(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #30: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #30: вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_031(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 6, 15, 21); return removed > 0 ? "Катастрофа #31: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #31: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 46); return removed > 0 ? "Катастрофа #31: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #31: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_032(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 11, 4, 11); return "Катастрофа #32: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "Катастрофа #32: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_033(EventCategory.CAGES) {
         @Override
@@ -959,15 +959,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_035(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 8, 0)); return "Катастрофа #35: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #35: ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_036(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 2, 5, 12, 14); return removed > 0 ? "Катастрофа #36: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #36: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 34); return removed > 0 ? "Катастрофа #36: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #36: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_037(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 7, 4, 11); return "Катастрофа #37: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #37: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_038(EventCategory.CAGES) {
         @Override
@@ -979,15 +979,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_040(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 18, 1)); return "Катастрофа #40: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #40: внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_041(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 3, 10, 9, 19); return removed > 0 ? "Катастрофа #41: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #41: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 42); return removed > 0 ? "Катастрофа #41: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #41: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_042(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 12, 4, 11); return "Катастрофа #42: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #42: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_043(EventCategory.CAGES) {
         @Override
@@ -999,15 +999,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_045(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #45: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #45: земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_046(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 9, 14, 24); return removed > 0 ? "Катастрофа #46: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #46: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 53); return removed > 0 ? "Катастрофа #46: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #46: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_047(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 8, 4, 11); return "Катастрофа #47: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #47: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_048(EventCategory.CAGES) {
         @Override
@@ -1019,15 +1019,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_050(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 12, 0)); return "Катастрофа #50: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #50: внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_051(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 8, 11, 17); return removed > 0 ? "Катастрофа #51: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #51: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 37); return removed > 0 ? "Катастрофа #51: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #51: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_052(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 13, 4, 11); return "Катастрофа #52: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #52: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_053(EventCategory.CAGES) {
         @Override
@@ -1039,15 +1039,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_055(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #55: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #55: вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_056(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 2, 7, 8, 22); return removed > 0 ? "Катастрофа #56: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #56: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 48); return removed > 0 ? "Катастрофа #56: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #56: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_057(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 9, 4, 11); return "Катастрофа #57: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "Катастрофа #57: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_058(EventCategory.CAGES) {
         @Override
@@ -1059,15 +1059,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_060(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 8, 0)); return "Катастрофа #60: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #60: ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_061(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 3, 6, 13, 15); return removed > 0 ? "Катастрофа #61: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #61: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 37); return removed > 0 ? "Катастрофа #61: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #61: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_062(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 14, 4, 11); return "Катастрофа #62: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #62: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_063(EventCategory.CAGES) {
         @Override
@@ -1079,15 +1079,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_065(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 18, 1)); return "Катастрофа #65: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #65: внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_066(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 5, 10, 20); return removed > 0 ? "Катастрофа #66: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #66: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 44); return removed > 0 ? "Катастрофа #66: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #66: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_067(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 10, 4, 11); return "Катастрофа #67: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "Катастрофа #67: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_068(EventCategory.CAGES) {
         @Override
@@ -1099,15 +1099,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_070(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #70: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #70: земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_071(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 15, 25); return removed > 0 ? "Катастрофа #71: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #71: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 55); return removed > 0 ? "Катастрофа #71: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #71: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_072(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 6, 4, 11); return "Катастрофа #72: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #72: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_073(EventCategory.CAGES) {
         @Override
@@ -1119,15 +1119,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_075(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 12, 0)); return "Катастрофа #75: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #75: внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_076(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 2, 9, 12, 18); return removed > 0 ? "Катастрофа #76: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #76: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 40); return removed > 0 ? "Катастрофа #76: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #76: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_077(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 11, 4, 11); return "Катастрофа #77: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "Катастрофа #77: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_078(EventCategory.CAGES) {
         @Override
@@ -1139,15 +1139,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_080(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #80: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #80: вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_081(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 3, 8, 9, 23); return removed > 0 ? "Катастрофа #81: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #81: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 51); return removed > 0 ? "Катастрофа #81: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #81: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_082(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 7, 4, 11); return "Катастрофа #82: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #82: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_083(EventCategory.CAGES) {
         @Override
@@ -1159,15 +1159,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_085(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 8, 0)); return "Катастрофа #85: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #85: ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_086(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 7, 14, 16); return removed > 0 ? "Катастрофа #86: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #86: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 39); return removed > 0 ? "Катастрофа #86: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #86: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_087(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 12, 4, 11); return "Катастрофа #87: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #87: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_088(EventCategory.CAGES) {
         @Override
@@ -1179,15 +1179,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_090(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 18, 1)); return "Катастрофа #90: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #90: внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_091(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 6, 11, 21); return removed > 0 ? "Катастрофа #91: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #91: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 46); return removed > 0 ? "Катастрофа #91: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #91: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_092(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 8, 4, 11); return "Катастрофа #92: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #92: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_093(EventCategory.CAGES) {
         @Override
@@ -1199,15 +1199,15 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_095(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 15, 1)); return "Катастрофа #95: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #95: земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_096(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 2, 5, 8, 14); return removed > 0 ? "Катастрофа #96: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #96: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 31); return removed > 0 ? "Катастрофа #96: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #96: ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_097(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 13, 4, 11); return "Катастрофа #97: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #97: в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_098(EventCategory.CAGES) {
         @Override
@@ -1219,7 +1219,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 12, 0)); return "Катастрофа #100: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #100: внезапная тьма ослепляет вас!"; }
     };
 
     private final EventCategory category;
