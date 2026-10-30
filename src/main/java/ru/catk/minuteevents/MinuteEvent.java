@@ -1358,6 +1358,10 @@ enum MinuteEvent {
 
     abstract String apply(ServerPlayer player);
 
+    String displayName() {
+        return name().toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+    }
+
     boolean isGood() {
         return switch (this) {
             case SMALL_GIFT, QUICK_FEET, SECOND_WIND, STAR_BURST, FRIENDLY_VISITOR,
