@@ -1268,6 +1268,86 @@ enum MinuteEvent {
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
+,
+    EXTRA_CATASTROPHE_101(EventCategory.BLOCKS) {
+        @Override
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 4, 9).below(), 4); return "Мега-взрыв! Разрушено блоков: " + n; }
+    },
+    EXTRA_CATASTROPHE_102(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.ZOMBIE}, 22, 5, 13); return "Взрывная орда преследует вас: " + n + " мобов!"; }
+    },
+    EXTRA_CATASTROPHE_103(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = 0; for (int i = 0; i < 5; i++) { if (EntityType.LIGHTNING_BOLT.spawn(player.serverLevel(), randomSurfacePosition(player, 3, 12), MobSpawnType.EVENT) != null) n++; } return "Кара небес! Ударов молнии: " + n; }
+    },
+    EXTRA_CATASTROPHE_104(EventCategory.WALLS) {
+        @Override
+        String apply(ServerPlayer player) { int n = buildWall(player, randomSurfacePosition(player, 2, 6), Blocks.OBSIDIAN.defaultBlockState(), 5, 5); return n > 0 ? "Обсидиановая стена отрезала путь!" : "Стена не смогла появиться."; }
+    },
+    EXTRA_CATASTROPHE_105(EventCategory.CAGES) {
+        @Override
+        String apply(ServerPlayer player) { int n = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return n > 0 ? "Обсидиановая ловушка захлопнулась!" : "Ловушка не смогла появиться."; }
+    },
+    EXTRA_CATASTROPHE_106(EventCategory.BLOCKS) {
+        @Override
+        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 4, 12, 35, 55); return "Разлом земли! Исчезло блоков: " + n; }
+    },
+    EXTRA_CATASTROPHE_107(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.WITHER_SKELETON, EntityType.BLAZE}, 14, 5, 12); return "Адский отряд прибыл: " + n + " врагов!"; }
+    },
+    EXTRA_CATASTROPHE_108(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 18, 1)); player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 25, 2)); return "Проклятие иссушения и замедления!"; }
+    },
+    EXTRA_CATASTROPHE_109(EventCategory.BLOCKS) {
+        @Override
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 8, 14).below(), 5); return "Метеорит расколол землю! Разрушено блоков: " + n; }
+    },
+    EXTRA_CATASTROPHE_110(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.RAVAGER, EntityType.VINDICATOR}, 12, 5, 12); return "Охотники настигают вас: " + n + " опасных мобов!"; }
+    },
+    EXTRA_CATASTROPHE_111(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.setSecondsOnFire(12); player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 20, 1)); return "Огненный яд! Горение и отравление!"; }
+    },
+    EXTRA_CATASTROPHE_112(EventCategory.WALLS) {
+        @Override
+        String apply(ServerPlayer player) { int n = buildWall(player, randomSurfacePosition(player, 3, 8), Blocks.MAGMA_BLOCK.defaultBlockState(), 5, 6); return n > 0 ? "Магмовая баррикада перекрыла путь!" : "Баррикада не смогла появиться."; }
+    },
+    EXTRA_CATASTROPHE_113(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.ENDERMAN}, 12, 5, 13); return "Стая эндерменов телепортировалась рядом: " + n + "!"; }
+    },
+    EXTRA_CATASTROPHE_114(EventCategory.BLOCKS) {
+        @Override
+        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 6, 14, 28, 48); return "Сейсмическая волна прокатилась по земле! Уничтожено блоков: " + n; }
+    },
+    EXTRA_CATASTROPHE_115(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 25, 0)); player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 35, 2)); player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 25, 2)); return "Полное затмение: слепота, слабость и замедление!"; }
+    },
+    EXTRA_CATASTROPHE_116(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.GHAST}, 5, 8, 15); return "Гасты обрушились на округу: " + n + "!"; }
+    },
+    EXTRA_CATASTROPHE_117(EventCategory.BLOCKS) {
+        @Override
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 2, 5).below(), 3); return "Взрыв прямо рядом! Разрушено блоков: " + n; }
+    },
+    EXTRA_CATASTROPHE_118(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.WARDEN}, 2, 6, 12); return "Древний ужас пробудился! Стражей: " + n; }
+    },
+    EXTRA_CATASTROPHE_119(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 35, 2)); player.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 12, 1)); return "Смертельный токсин проник в кровь!"; }
+    },
+    EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
     };
 
     private final EventCategory category;
