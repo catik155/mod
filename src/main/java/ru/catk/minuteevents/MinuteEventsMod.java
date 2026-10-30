@@ -42,6 +42,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private int elapsedTicks;
     private int timerSyncTicks;
     private boolean previewMode = false;
+    private boolean blindMode = false;
     private final Map<UUID, MinuteEvent> upcomingEvents = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
     private Path configPath;
@@ -96,7 +97,9 @@ public final class MinuteEventsMod implements ModInitializer {
                     .then(Commands.literal("preview")
                         .executes(context -> setPreviewMode(context.getSource(), true)))
                     .then(Commands.literal("chance")
-                        .executes(context -> setPreviewMode(context.getSource(), false))))
+                        .executes(context -> setDisplayMode(context.getSource(), "chance")))
+                    .then(Commands.literal("blind")
+                        .executes(context -> setDisplayMode(context.getSource(), "blind"))))
                 .then(Commands.literal("status")
                     .executes(context -> showStatus(context.getSource())))
                 .then(Commands.literal("on")
@@ -145,15 +148,26 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private int setPreviewMode(CommandSourceStack source, boolean value) {
-        previewMode = value;
+        return setDisplayMode(source, value ? "preview" : "chance");
+    }
+
+    private int setDisplayMode(CommandSourceStack source, String mode) {
+        previewMode = mode.equals("preview");
+        blindMode = mode.equals("blind");
         upcomingEvents.clear();
-        source.sendSuccess(() -> Component.literal(value
-            ? "Режим предпросмотра включён: таймер показывает следующее событие."
-            : "Обычный режим включён: отображаются проценты шанса категорий."), true);
+        String message = switch (mode) {
+            case "preview" -> "Режим предпросмотра включён: таймер показывает следующее событие.";
+            case "blind" -> "Слепой режим включён: видно только время до события.";
+            default -> "Обычный режим включён: отображаются шансы категорий и названия событий.";
+        };
+        source.sendSuccess(() -> Component.literal(message), true);
         return 1;
     }
 
     private String timerDisplayFor(ServerPlayer player) {
+        if (blindMode) {
+            return "Слепой режим";
+        }
         if (previewMode) {
             MinuteEvent event = upcomingEvents.computeIfAbsent(player.getUUID(), ignored -> {
                 int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
@@ -161,7 +175,7 @@ public final class MinuteEventsMod implements ModInitializer {
             });
             return "Будет: " + event.displayName();
         }
-        return "Шансы: " + categoryChanceSummary();
+        return "Шансы категорий: " + categoryChanceSummary();
     }
 
     private String categoryChanceSummary() {
@@ -180,7 +194,7 @@ public final class MinuteEventsMod implements ModInitializer {
         source.sendSuccess(
             () -> Component.literal("Минутные события " + status
                 + ". Интервал: " + intervalSeconds + " сек. До следующего: " + remaining + " сек."
-                + " Режим: " + (previewMode ? "предпросмотр" : "проценты")
+                + " Режим: " + (previewMode ? "предпросмотр" : blindMode ? "слепой" : "проценты")
                 + " Категории: " + categoryStatus()),
             false
         );
