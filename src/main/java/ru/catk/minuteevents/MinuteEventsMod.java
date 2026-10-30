@@ -109,6 +109,8 @@ public final class MinuteEventsMod implements ModInitializer {
                         .executes(context -> setTimerVisible(context.getSource(), false))))
                 .then(Commands.literal("status")
                     .executes(context -> showStatus(context.getSource())))
+                .then(Commands.literal("chances")
+                    .executes(context -> showEventChances(context.getSource())))
                 .then(Commands.literal("on")
                     .requires(source -> source.hasPermission(2))
                     .executes(context -> setEnabled(context.getSource(), true)))
@@ -165,7 +167,7 @@ public final class MinuteEventsMod implements ModInitializer {
         String message = switch (mode) {
             case "preview" -> "Режим предпросмотра включён: таймер показывает следующее событие.";
             case "blind" -> "Слепой режим включён: видно только время до события.";
-            default -> "Обычный режим включён: отображаются шансы категорий и названия событий.";
+            default -> "Режим процентов включён: точные шансы каждого события смотри командой /minuteevent chances.";
         };
         source.sendSuccess(() -> Component.literal(message), true);
         return 1;
@@ -190,26 +192,36 @@ public final class MinuteEventsMod implements ModInitializer {
             });
             return "Будет: " + event.displayName();
         }
-        return "Шансы категорий: " + categoryChanceSummary();
+        return "Точные шансы: /minuteevent chances";
     }
 
-    private String categoryChanceSummary() {
-        int cumulative = 0;
-        StringBuilder text = new StringBuilder();
-        for (EventCategory category : EventCategory.configurableValues()) {
-            int chance = categoryEnabled.getOrDefault(category, true)
-                ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
-            int before = Math.min(100, cumulative);
-            cumulative += chance;
-            int after = Math.min(100, cumulative);
-            int effectiveChance = Math.max(0, after - before);
-            if (text.length() > 0) text.append(" | ");
-            text.append(category.displayName()).append(": ").append(effectiveChance).append("%");
+    private int showEventChances(CommandSourceStack source) {
+        EnumMap<EventCategory, Integer> eventCounts = new EnumMap<>(EventCategory.class);
+        for (MinuteEvent event : MinuteEvent.values()) {
+            eventCounts.merge(event.category(), 1, Integer::sum);
         }
-        int otherChance = Math.max(0, 100 - Math.min(100, cumulative));
-        if (text.length() > 0) text.append(" | ");
-        text.append("Другое: ").append(otherChance).append("%");
-        return text.toString();
+
+        int activeChance = 0;
+        for (EventCategory category : EventCategory.configurableValues()) {
+            if (categoryEnabled.getOrDefault(category, true)) {
+                activeChance += categoryChances.getOrDefault(category, category.defaultChance());
+            }
+        }
+        int otherChance = Math.max(0, 100 - activeChance);
+
+        source.sendSuccess(() -> Component.literal("Точные вероятности каждого события (за один запуск):"), false);
+        for (MinuteEvent event : MinuteEvent.values()) {
+            EventCategory category = event.category();
+            int categoryChance = category == EventCategory.OTHER
+                ? otherChance
+                : categoryEnabled.getOrDefault(category, true)
+                    ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
+            int count = Math.max(1, eventCounts.getOrDefault(category, 1));
+            double eventChance = (double) categoryChance / count;
+            String line = String.format(java.util.Locale.ROOT, "%s — %.2f%%", event.displayName(), eventChance);
+            source.sendSuccess(() -> Component.literal(line), false);
+        }
+        return 1;
     }
 
     private int showStatus(CommandSourceStack source) {
