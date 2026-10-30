@@ -186,11 +186,20 @@ public final class MinuteEventsMod implements ModInitializer {
             return "Событие скрыто";
         }
         if (previewMode) {
-            MinuteEvent event = upcomingEvents.computeIfAbsent(player.getUUID(), ignored -> {
-                int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
-                return streak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
-            });
-            return String.format(java.util.Locale.ROOT, "Следующее: %s (%.3f%%)", event.displayName(), eventChance(event, badEventStreaks.getOrDefault(player.getUUID(), 0)));
+            int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
+            StringBuilder display = new StringBuilder("Топ-3 вероятных события:");
+            java.util.Arrays.stream(MinuteEvent.values())
+                .filter(event -> badStreak < 3 || event.isGood())
+                .sorted(java.util.Comparator
+                    .comparingDouble((MinuteEvent event) -> eventChance(event, badStreak))
+                    .reversed()
+                    .thenComparing(MinuteEvent::displayName))
+                .limit(3)
+                .forEach(event -> display.append("\\n")
+                    .append(event.displayName())
+                    .append(" — ")
+                    .append(String.format(java.util.Locale.ROOT, "%.3f%%", eventChance(event, badStreak))));
+            return display.toString();
         }
         return "Точные шансы: /minuteevent chances";
     }
@@ -368,13 +377,8 @@ public final class MinuteEventsMod implements ModInitializer {
 
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            MinuteEvent event = previewMode ? upcomingEvents.remove(player.getUUID()) : null;
             int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
-            if (badStreak >= 3) {
-                if (event == null || !event.isGood()) event = MinuteEvent.randomGoodEvent();
-            } else if (event == null) {
-                event = selectEvent();
-            }
+            MinuteEvent event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
             String description = event.apply(player);
             if (event.isGood()) {
                 badEventStreaks.put(player.getUUID(), 0);
