@@ -190,9 +190,33 @@ public final class MinuteEventsMod implements ModInitializer {
                 int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
                 return streak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
             });
-            return "Будет: " + event.displayName();
+            return String.format(java.util.Locale.ROOT, "Следующее: %s (%.3f%%)", event.displayName(), eventChance(event, badEventStreaks.getOrDefault(player.getUUID(), 0)));
         }
         return "Точные шансы: /minuteevent chances";
+    }
+
+    private double eventChance(MinuteEvent event, int badStreak) {
+        if (badStreak >= 3) {
+            if (!event.isGood()) return 0.0;
+            long goodCount = java.util.Arrays.stream(MinuteEvent.values()).filter(MinuteEvent::isGood).count();
+            return 100.0 / Math.max(1, goodCount);
+        }
+        long categoryCount = java.util.Arrays.stream(MinuteEvent.values())
+            .filter(candidate -> candidate.category() == event.category()).count();
+        int categoryChance;
+        if (event.category() == EventCategory.OTHER) {
+            int configured = 0;
+            for (EventCategory category : EventCategory.configurableValues()) {
+                if (categoryEnabled.getOrDefault(category, true)) {
+                    configured += categoryChances.getOrDefault(category, category.defaultChance());
+                }
+            }
+            categoryChance = Math.max(0, 100 - configured);
+        } else {
+            categoryChance = categoryEnabled.getOrDefault(event.category(), true)
+                ? categoryChances.getOrDefault(event.category(), event.category().defaultChance()) : 0;
+        }
+        return (double) categoryChance / Math.max(1, categoryCount);
     }
 
     private int showEventChances(CommandSourceStack source) {
