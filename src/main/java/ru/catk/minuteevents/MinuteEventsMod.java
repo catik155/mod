@@ -76,7 +76,7 @@ public final class MinuteEventsMod implements ModInitializer {
                 int remaining = Math.max(0, intervalSeconds - elapsedTicks / TICKS_PER_SECOND);
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (ServerPlayNetworking.canSend(player, EventTimerPayload.TYPE)) {
-                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining, timerVisible ? timerDisplayFor(player) : "__HIDE_TIMER__"));
+                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining, timerVisible, blindMode ? "" : timerDisplayFor(player)));
                     }
                 }
             }
@@ -196,29 +196,40 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private int showEventChances(CommandSourceStack source) {
-        EnumMap<EventCategory, Integer> eventCounts = new EnumMap<>(EventCategory.class);
+        ServerPlayer player = source.getEntity() instanceof ServerPlayer serverPlayer ? serverPlayer : null;
+        int badStreak = player == null ? 0 : badEventStreaks.getOrDefault(player.getUUID(), 0);
+        EnumMap<EventCategory, Integer> counts = new EnumMap<>(EventCategory.class);
+        int goodCount = 0;
         for (MinuteEvent event : MinuteEvent.values()) {
-            eventCounts.merge(event.category(), 1, Integer::sum);
+            counts.merge(event.category(), 1, Integer::sum);
+            if (event.isGood()) goodCount++;
         }
-
-        int activeChance = 0;
-        for (EventCategory category : EventCategory.configurableValues()) {
-            if (categoryEnabled.getOrDefault(category, true)) {
-                activeChance += categoryChances.getOrDefault(category, category.defaultChance());
+        source.sendSuccess(() -> Component.literal("Точные шансы следующего события:"), false);
+        if (badStreak >= 3) {
+            source.sendSuccess(() -> Component.literal("После 3 плохих событий гарантируется хорошее."), false);
+        }
+        for (MinuteEvent event : MinuteEvent.values()) {
+            double chance;
+            if (badStreak >= 3) {
+                chance = event.isGood() ? 100.0 / Math.max(1, goodCount) : 0.0;
+            } else {
+                EventCategory category = event.category();
+                int categoryChance;
+                if (category == EventCategory.OTHER) {
+                    int configured = 0;
+                    for (EventCategory configuredCategory : EventCategory.configurableValues()) {
+                        if (categoryEnabled.getOrDefault(configuredCategory, true)) {
+                            configured += categoryChances.getOrDefault(configuredCategory, configuredCategory.defaultChance());
+                        }
+                    }
+                    categoryChance = Math.max(0, 100 - configured);
+                } else {
+                    categoryChance = categoryEnabled.getOrDefault(category, true)
+                        ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
+                }
+                chance = (double) categoryChance / Math.max(1, counts.getOrDefault(category, 1));
             }
-        }
-        int otherChance = Math.max(0, 100 - activeChance);
-
-        source.sendSuccess(() -> Component.literal("Точные вероятности каждого события (за один запуск):"), false);
-        for (MinuteEvent event : MinuteEvent.values()) {
-            EventCategory category = event.category();
-            int categoryChance = category == EventCategory.OTHER
-                ? otherChance
-                : categoryEnabled.getOrDefault(category, true)
-                    ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
-            int count = Math.max(1, eventCounts.getOrDefault(category, 1));
-            double eventChance = (double) categoryChance / count;
-            String line = String.format(java.util.Locale.ROOT, "%s — %.2f%%", event.displayName(), eventChance);
+            String line = String.format(java.util.Locale.ROOT, "%s — %.3f%%", event.displayName(), chance);
             source.sendSuccess(() -> Component.literal(line), false);
         }
         return 1;
