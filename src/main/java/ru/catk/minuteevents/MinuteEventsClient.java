@@ -16,12 +16,17 @@ public final class MinuteEventsClient implements ClientModInitializer {
 
     private static String currentMessage;
     private static long shownAtNanos;
+    private static int secondsUntilEvent = 60;
 
     @Override
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(
             EventNotificationPayload.TYPE,
             (payload, context) -> show(payload.message())
+        );
+        ClientPlayNetworking.registerGlobalReceiver(
+            EventTimerPayload.TYPE,
+            (payload, context) -> secondsUntilEvent = payload.secondsRemaining()
         );
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
     }
@@ -33,7 +38,14 @@ public final class MinuteEventsClient implements ClientModInitializer {
 
     private static void renderNotification(GuiGraphics graphics, Object tickCounter) {
         Minecraft client = Minecraft.getInstance();
-        if (client.player == null || currentMessage == null) {
+        if (client.player == null) {
+            return;
+        }
+        String timerText = String.format(java.util.Locale.ROOT, "Следующее событие: %02d:%02d", secondsUntilEvent / 60, secondsUntilEvent % 60);
+        int timerWidth = client.font.width(timerText);
+        graphics.fill(client.getWindow().getGuiScaledWidth() - timerWidth - 20, 8, client.getWindow().getGuiScaledWidth() - 8, 25, 0xB9161920);
+        graphics.drawString(client.font, timerText, client.getWindow().getGuiScaledWidth() - timerWidth - 14, 13, 0xFFFFC66D, false);
+        if (currentMessage == null) {
             return;
         }
 
