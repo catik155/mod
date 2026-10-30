@@ -44,8 +44,9 @@ public final class MinuteEventsClient implements ClientModInitializer {
         }
         String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d | %s", secondsUntilEvent / 60, secondsUntilEvent % 60, timerDetail);
         int timerWidth = client.font.width(timerText);
-        graphics.fill(client.getWindow().getGuiScaledWidth() - timerWidth - 20, 8, client.getWindow().getGuiScaledWidth() - 8, 25, 0xB9161920);
-        graphics.drawString(client.font, timerText, client.getWindow().getGuiScaledWidth() - timerWidth - 14, 13, 0xFFFFC66D, false);
+        int timerX = 8;
+        graphics.fill(timerX, 8, timerX + timerWidth + 12, 25, 0xB9161920);
+        graphics.drawString(client.font, timerText, timerX + 6, 13, 0xFFFFC66D, false);
         if (currentMessage == null) {
             return;
         }
