@@ -54,9 +54,17 @@ public final class MinuteEventsClient implements ClientModInitializer {
             graphics.drawString(client.font, timerText, 14, 13, 0xFFFFC66D, false);
         }
         if (!timerDetail.isBlank()) {
-            int detailWidth = Math.min(client.font.width(timerDetail), 320);
-            graphics.fill(8, 29, 8 + detailWidth + 12, 46, 0xB9161920);
-            graphics.drawString(client.font, timerDetail, 14, 34, 0xFFFFFFFF, false);
+            List<FormattedCharSequence> detailLines = client.font.split(
+                Component.literal(timerDetail),
+                320
+            );
+            int detailHeight = Math.max(17, detailLines.size() * 10 + 8);
+            int detailWidth = Math.min(340, Math.max(120, detailLines.stream()
+                .mapToInt(client.font::width).max().orElse(120))) + 12;
+            graphics.fill(8, 29, 8 + detailWidth, 29 + detailHeight, 0xB9161920);
+            for (int i = 0; i < detailLines.size(); i++) {
+                graphics.drawString(client.font, detailLines.get(i), 14, 33 + i * 10, 0xFFFFFFFF, false);
+            }
         }
         if (currentMessage == null) {
             return;
