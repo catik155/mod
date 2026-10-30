@@ -179,10 +179,31 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private String categoryChanceSummary() {
-        StringBuilder text = new StringBuilder();
+        int cumulative = 0;
+        EnumMap<EventCategory, Integer> categorySlots = new EnumMap<>(EventCategory.class);
         for (EventCategory category : EventCategory.configurableValues()) {
+            int chance = categoryEnabled.getOrDefault(category, true)
+                ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
+            int before = Math.min(100, cumulative);
+            cumulative += chance;
+            int after = Math.min(100, cumulative);
+            categorySlots.put(category, Math.max(0, after - before));
+        }
+        categorySlots.put(EventCategory.OTHER, Math.max(0, 100 - Math.min(100, cumulative)));
+
+        EnumMap<EventCategory, Integer> counts = new EnumMap<>(EventCategory.class);
+        for (MinuteEvent event : MinuteEvent.values()) {
+            counts.merge(event.category(), 1, Integer::sum);
+        }
+
+        StringBuilder text = new StringBuilder();
+        for (MinuteEvent event : MinuteEvent.values()) {
+            int slots = categorySlots.getOrDefault(event.category(), 0);
+            int count = counts.getOrDefault(event.category(), 1);
+            double percent = slots / (double) count;
             if (text.length() > 0) text.append(" | ");
-            text.append(category.displayName()).append(" ").append(categoryChances.get(category)).append("%");
+            text.append(event.displayName()).append(": ")
+                .append(String.format(java.util.Locale.ROOT, "%.2f", percent)).append("%");
         }
         return text.toString();
     }
