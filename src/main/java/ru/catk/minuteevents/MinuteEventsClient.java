@@ -43,7 +43,13 @@ public final class MinuteEventsClient implements ClientModInitializer {
         if (client.player == null) {
             return;
         }
-        if (timerVisible) {\n            String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d | %s", secondsUntilEvent / 60, secondsUntilEvent % 60, timerDetail);\n            int timerWidth = client.font.width(timerText);\n            int timerX = 8;\n            graphics.fill(timerX, 8, timerX + timerWidth + 12, 25, 0xB9161920);\n            graphics.drawString(client.font, timerText, timerX + 6, 13, 0xFFFFC66D, false);\n        }
+        if (timerVisible) {
+            String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d | %s", secondsUntilEvent / 60, secondsUntilEvent % 60, timerDetail);
+            int timerWidth = client.font.width(timerText);
+            int timerX = 8;
+            graphics.fill(timerX, 8, timerX + timerWidth + 12, 25, 0xB9161920);
+            graphics.drawString(client.font, timerText, timerX + 6, 13, 0xFFFFC66D, false);
+        }
         if (currentMessage == null) {
             return;
         }
