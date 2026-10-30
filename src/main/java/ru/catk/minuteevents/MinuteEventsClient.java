@@ -28,7 +28,11 @@ public final class MinuteEventsClient implements ClientModInitializer {
         );
         ClientPlayNetworking.registerGlobalReceiver(
             EventTimerPayload.TYPE,
-            (payload, context) -> { secondsUntilEvent = payload.secondsRemaining(); timerVisible = !"__HIDE_TIMER__".equals(payload.detail()); if (timerVisible) timerDetail = payload.detail(); }
+            (payload, context) -> {
+                secondsUntilEvent = payload.secondsRemaining();
+                timerVisible = payload.timerVisible();
+                timerDetail = payload.detail();
+            }
         );
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
     }
@@ -44,11 +48,15 @@ public final class MinuteEventsClient implements ClientModInitializer {
             return;
         }
         if (timerVisible) {
-            String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d | %s", secondsUntilEvent / 60, secondsUntilEvent % 60, timerDetail);
+            String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d", secondsUntilEvent / 60, secondsUntilEvent % 60);
             int timerWidth = client.font.width(timerText);
-            int timerX = 8;
-            graphics.fill(timerX, 8, timerX + timerWidth + 12, 25, 0xB9161920);
-            graphics.drawString(client.font, timerText, timerX + 6, 13, 0xFFFFC66D, false);
+            graphics.fill(8, 8, 8 + timerWidth + 12, 25, 0xB9161920);
+            graphics.drawString(client.font, timerText, 14, 13, 0xFFFFC66D, false);
+        }
+        if (!timerDetail.isBlank()) {
+            int detailWidth = Math.min(client.font.width(timerDetail), 320);
+            graphics.fill(8, 29, 8 + detailWidth + 12, 46, 0xB9161920);
+            graphics.drawString(client.font, timerDetail, 14, 34, 0xFFFFFFFF, false);
         }
         if (currentMessage == null) {
             return;
