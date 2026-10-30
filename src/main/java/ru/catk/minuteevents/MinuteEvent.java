@@ -1345,6 +1345,206 @@ enum MinuteEvent {
         @Override
         String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 35, 2)); player.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 12, 1)); return "Смертельный токсин проник в кровь!"; }
     },
+    GOOD_COOKED_BEEF(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.COOKED_BEEF, 16)); return "Подарок: 16 стейков!"; }
+    },
+    GOOD_GOLDEN_CARROTS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.GOLDEN_CARROT, 12)); return "Подарок: золотая морковь!"; }
+    },
+    GOOD_GOLDEN_APPLES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.GOLDEN_APPLE, 3)); return "Подарок: 3 золотых яблока!"; }
+    },
+    GOOD_DIAMONDS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.DIAMOND, 4)); return "Подарок: 4 алмаза!"; }
+    },
+    GOOD_EMERALDS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.EMERALD, 12)); return "Подарок: 12 изумрудов!"; }
+    },
+    GOOD_IRON_INGOTS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.IRON_INGOT, 24)); return "Подарок: 24 железных слитка!"; }
+    },
+    GOOD_GOLD_INGOTS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.GOLD_INGOT, 12)); return "Подарок: 12 золотых слитков!"; }
+    },
+    GOOD_OBSIDIAN(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.OBSIDIAN, 16)); return "Подарок: обсидиан!"; }
+    },
+    GOOD_ENDER_PEARLS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.ENDER_PEARL, 8)); return "Подарок: жемчуг Края!"; }
+    },
+    GOOD_EXPERIENCE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.EXPERIENCE_BOTTLE, 16)); return "Подарок: бутылочки опыта!"; }
+    },
+    GOOD_TOTEM(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.TOTEM_OF_UNDYING, 1)); return "Невероятно! Тотем бессмертия!"; }
+    },
+    GOOD_ENCHANTED_GOLDEN_APPLE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 1)); return "Легендарный подарок: зачарованное золотое яблоко!"; }
+    },
+    GOOD_BOW(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.BOW, 1)); return "Подарок: лук!"; }
+    },
+    GOOD_ARROWS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.ARROW, 64)); return "Подарок: 64 стрелы!"; }
+    },
+    GOOD_SHIELD(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.SHIELD, 1)); return "Подарок: щит!"; }
+    },
+    GOOD_DIAMOND_PICKAXE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.DIAMOND_PICKAXE, 1)); return "Подарок: алмазная кирка!"; }
+    },
+    GOOD_BREAD(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.BREAD, 24)); return "Подарок: хлебный запас!"; }
+    },
+    GOOD_COBBLESTONE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.COBBLESTONE, 64)); return "Подарок: 64 булыжника!"; }
+    },
+    GOOD_TORCHES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.TORCH, 48)); return "Подарок: 48 факелов!"; }
+    },
+    GOOD_ENDER_CHEST(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { giveItem(player, new ItemStack(Items.ENDER_CHEST, 1)); return "Подарок: эндер-сундук!"; }
+    },
+    GOOD_REGENERATION(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20 * 45, 1)); return "Благословение регенерации!"; }
+    },
+    GOOD_RESISTANCE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 60, 1)); return "Защитное благословение!"; }
+    },
+    GOOD_STRENGTH(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 60, 1)); return "Благословение силы!"; }
+    },
+    GOOD_SPEED(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 60, 1)); return "Благословение скорости!"; }
+    },
+    GOOD_ABSORPTION(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 20 * 90, 3)); return "Золотой щит поглощения!"; }
+    },
+    BAD_HUNGER(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 45, 2)); return "Внезапный голод!"; }
+    },
+    BAD_MINING_FATIGUE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 2)); return "Усталость шахтёра!"; }
+    },
+    BAD_NAUSEA(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 25, 0)); return "Мир пошёл кругом!"; }
+    },
+    BAD_BLINDNESS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 20, 0)); return "Внезапная тьма!"; }
+    },
+    BAD_WEAKNESS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 45, 1)); return "Слабость накрывает вас!"; }
+    },
+    BAD_POISON(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 18, 1)); return "Отравление!"; }
+    },
+    BAD_WITHER(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 12, 0)); return "Проклятие иссушения!"; }
+    },
+    BAD_SLOWNESS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 35, 2)); return "Ноги стали свинцовыми!"; }
+    },
+    BAD_LEVITATION(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 20 * 8, 1)); return "Гравитация сломалась!"; }
+    },
+    BAD_DARKNESS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * 18, 0)); return "Тьма поглотила всё вокруг!"; }
+    },
+    BAD_FIRE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { player.setRemainingFireTicks(10 * 20); return "Вы внезапно загорелись!"; }
+    },
+    BAD_CREEPERS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CREEPER}, 3, 4, 8); return "Криперы рядом: " + n + "!"; }
+    },
+    BAD_ZOMBIES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE}, 6, 4, 9); return "Зомби атакуют: " + n + "!"; }
+    },
+    BAD_SKELETONS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.SKELETON}, 5, 4, 9); return "Скелеты открыли огонь: " + n + "!"; }
+    },
+    BAD_SPIDERS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.SPIDER}, 5, 4, 8); return "Пауки окружили вас: " + n + "!"; }
+    },
+    BAD_PHANTOMS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.PHANTOM}, 3, 5, 10); return "Фантомы спустились с неба: " + n + "!"; }
+    },
+    BAD_WITCHES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.WITCH}, 2, 5, 9); return "Ведьмы устроили засаду: " + n + "!"; }
+    },
+    BAD_HUSKS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.HUSK}, 5, 4, 9); return "Пустынная нежить прибыла: " + n + "!"; }
+    },
+    BAD_DROWNED(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.DROWNED}, 5, 4, 9); return "Утопленники пришли за вами: " + n + "!"; }
+    },
+    BAD_SLIMES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.SLIME}, 4, 4, 8); return "Слизни заполонили округу: " + n + "!"; }
+    },
+    BAD_CAVE_SPIDERS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CAVE_SPIDER}, 4, 4, 8); return "Пещерные пауки напали: " + n + "!"; }
+    },
+    BAD_PILLAGERS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.PILLAGER}, 4, 5, 10); return "Разбойничий патруль: " + n + "!"; }
+    },
+    BAD_VINDICATORS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.VINDICATOR}, 3, 5, 9); return "Палачи преследуют вас: " + n + "!"; }
+    },
+    BAD_BLAZES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.BLAZE}, 3, 5, 10); return "Вспыхнула огненная засада: " + n + "!"; }
+    },
+    BAD_MAGMA_CUBES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.MAGMA_CUBE}, 4, 4, 8); return "Магмовые кубы прыгают вокруг: " + n + "!"; }
+    },
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
         String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
@@ -1364,7 +1564,8 @@ enum MinuteEvent {
 
     boolean isGood() {
         return switch (this) {
-            case SMALL_GIFT, QUICK_FEET, SECOND_WIND, STAR_BURST, FRIENDLY_VISITOR,
+            case GOOD_COOKED_BEEF, GOOD_GOLDEN_CARROTS, GOOD_GOLDEN_APPLES, GOOD_DIAMONDS, GOOD_EMERALDS, GOOD_IRON_INGOTS, GOOD_GOLD_INGOTS, GOOD_OBSIDIAN, GOOD_ENDER_PEARLS, GOOD_EXPERIENCE, GOOD_TOTEM, GOOD_ENCHANTED_GOLDEN_APPLE, GOOD_BOW, GOOD_ARROWS, GOOD_SHIELD, GOOD_DIAMOND_PICKAXE, GOOD_BREAD, GOOD_COBBLESTONE, GOOD_TORCHES, GOOD_ENDER_CHEST, GOOD_REGENERATION, GOOD_RESISTANCE, GOOD_STRENGTH, GOOD_SPEED, GOOD_ABSORPTION,
+                 SMALL_GIFT, QUICK_FEET, SECOND_WIND, STAR_BURST, FRIENDLY_VISITOR,
                  SLOW_FALLING_GIFT, REGENERATION_GIFT, ABSORPTION_SHIELD,
                  FIRE_RESISTANCE_GIFT, WATER_BREATHING_GIFT, INVISIBILITY_GIFT,
                  NIGHT_VISION_GIFT, SATURATION_BLESSING, DIAMOND_GIFT, EMERALD_GIFT,
