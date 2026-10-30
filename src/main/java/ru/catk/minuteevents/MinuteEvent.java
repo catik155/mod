@@ -71,7 +71,7 @@ enum MinuteEvent {
         String apply(ServerPlayer player) {
             int removed = removeBlockBurst(player, 2, 4, 5, 9);
             return removed > 0
-                ? "Рядом с вами исчезло блоков: " + removed + "."
+                ? "Рядом с вами что-то подозрительно исчезло. Кто-то явно покопался!"
                 : "Рядом с вами ничего не удалось разрушить.";
         }
     },
@@ -80,7 +80,7 @@ enum MinuteEvent {
         String apply(ServerPlayer player) {
             int removed = removeBlockBurst(player, 5, 10, 9, 16);
             return removed > 0
-                ? "В 5–10 блоках от вас исчезло блоков: " + removed + "."
+                ? "В 5–10 блоках от вас прошёлся невидимый шахтёр. Лучше не спрашивать."
                 : "На выбранном участке блоки не удалось разрушить.";
         }
     },
@@ -89,7 +89,7 @@ enum MinuteEvent {
         String apply(ServerPlayer player) {
             int removed = removeBlockBurst(player, 2, 4, 14, 22);
             return removed > 0
-                ? "Обвал рядом с вами убрал блоков: " + removed + "!"
+                ? "Рядом с вами случился обвал. Земля решила обновить интерьер!"
                 : "Обвал не нашёл подходящих блоков.";
         }
     },
@@ -98,7 +98,7 @@ enum MinuteEvent {
         String apply(ServerPlayer player) {
             int removed = removeBlockBurst(player, 5, 10, 18, 27);
             return removed > 0
-                ? "Сильный обвал в 5–10 блоках снёс блоков: " + removed + "!"
+                ? "В 5–10 блоках прогремел мощный обвал. Геология сегодня без тормозов!"
                 : "Обвал не нашёл подходящих блоков.";
         }
     },
@@ -108,7 +108,7 @@ enum MinuteEvent {
             BlockPos center = randomSurfacePosition(player, 5, 10).below();
             int removed = createCrater(player, center, 2);
             return removed > 0
-                ? "В 5–10 блоках прогремел взрыв: разрушено блоков " + removed + "!"
+                ? "В 5–10 блоках бабахнуло! Крипер? Нет, просто Minecraft нервничает."
                 : "Взрыв прогремел, но блоки устояли.";
         }
     },
@@ -1559,7 +1559,56 @@ enum MinuteEvent {
     abstract String apply(ServerPlayer player);
 
     String displayName() {
-        return name().toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+        return switch (this) {
+            case NEARBY_BLOCK_BURST -> "Соседний блок испарился";
+            case DISTANT_BLOCK_BURST -> "Дистанционная уборка";
+            case LARGE_NEARBY_CAVE_IN -> "Локальный конец света";
+            case WIDE_DISTANT_CAVE_IN -> "Обвал по расписанию";
+            case MINI_BLAST -> "Небольшое БА-БАХ";
+            case OBSIDIAN_CAGE -> "Обсидиум: вы арестованы";
+            case DISTANT_OBSIDIAN_CAGE -> "Клетка для соседа";
+            case WEB_SNARE -> "Паучий капкан";
+            case STONE_SPIKES -> "Земля сказала: стой";
+            case SAND_WALL -> "Песчаная пробка";
+            case STONE_BRIDGE -> "Строители Minecraft одобряют";
+            case ANIMAL_HERD -> "Ферма сама приехала";
+            case BEE_SWARM -> "Пчелиный отдел безопасности";
+            case ZOMBIE_PACK -> "Зомби идут на собеседование";
+            case SKELETON_PACK -> "Скелеты с плохими новостями";
+            case SPIDER_PACK -> "Паучья вечеринка";
+            case WITCH_ATTACK -> "Ведьма заглянула в гости";
+            case BLINDNESS, BAD_BLINDNESS -> "Режим: экран выключен";
+            case SLUGGISH -> "Черепаший режим";
+            case POISON, BAD_POISON -> "Не пробуйте это на вкус";
+            case WITHER, BAD_WITHER -> "Проклятие без подписки";
+            case FIRE, BAD_FIRE -> "Вы теперь факел";
+            case PLAYER_CAGE -> "Персональная парковка";
+            case DISTANT_CAGE -> "Клетка неподалёку";
+            case STONE_BARRICADE -> "Каменная пробка";
+            case HOSTILE_VISITOR -> "Нежданные гости";
+            case FRIENDLY_VISITOR -> "Милый незваный гость";
+            case SMALL_GIFT -> "Подарочек от судьбы";
+            case QUICK_FEET -> "Ноги на турбо";
+            case SECOND_WIND -> "Второе дыхание";
+            case STAR_BURST -> "Звёздный конфетти";
+            case CREEPER_SQUAD, BAD_CREEPERS -> "Криперы: дружба отменяется";
+            case ENDERMAN_HUNT -> "Эндермены ищут вас";
+            case SLIME_INVASION, BAD_SLIMES -> "Слизневый корпоратив";
+            case PHANTOM_SWARM, BAD_PHANTOMS -> "Фантомы без приглашения";
+            case DROWNED_RAID, BAD_DROWNED -> "Утопленники на районе";
+            case PILLAGER_PATROL, BAD_PILLAGERS -> "Разбойничий патруль";
+            case VINDICATOR_HUNT, BAD_VINDICATORS -> "Палачи на подработке";
+            case BLAZE_AMBUSH, BAD_BLAZES -> "Ифриты поджидают";
+            case WOLF_GUARDIANS -> "Волки: охрана или угроза?";
+            case IRON_GOLEM_SQUAD -> "Железная охрана";
+            case RAVAGER_CHARGE -> "Разоритель уже бежит";
+            case GUARDIAN_PATROL -> "Стражи на посту";
+            case FOX_FRIENDS -> "Лисья тусовка";
+            case HORSE_DELIVERY -> "Доставка лошадей";
+            case CAT_VISIT -> "Котики пришли";
+            case VILLAGER_MEETING -> "Собрание жителей";
+            default -> name().toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+        };
     }
 
     EventCategory category() { return category; }
