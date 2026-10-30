@@ -1358,6 +1358,29 @@ enum MinuteEvent {
 
     abstract String apply(ServerPlayer player);
 
+    boolean isGood() {
+        return switch (this) {
+            case SMALL_GIFT, QUICK_FEET, SECOND_WIND, STAR_BURST, FRIENDLY_VISITOR,
+                 SLOW_FALLING_GIFT, REGENERATION_GIFT, ABSORPTION_SHIELD,
+                 FIRE_RESISTANCE_GIFT, WATER_BREATHING_GIFT, INVISIBILITY_GIFT,
+                 NIGHT_VISION_GIFT, SATURATION_BLESSING, DIAMOND_GIFT, EMERALD_GIFT,
+                 GOLD_RAIN, IRON_CACHE, ENDER_PEARLS_GIFT, GOLDEN_APPLE_GIFT,
+                 TNT_GIFT, ARROW_BUNDLE, FOOD_CRATE, OBSIDIAN_CACHE, EXPERIENCE_BOTTLES,
+                 ENDER_CHEST_GIFT, DIAMOND_SWORD_GIFT, SHIELD_GIFT, RANDOM_ANIMAL_PARTY,
+                 GIFT_OF_TORCHES, GIFT_OF_BREAD, GIFT_OF_BOW, GIFT_OF_COBBLESTONE,
+                 GIFT_OF_LAPIS, GIFT_OF_REDSTONE, SMALL_HEALING_GIFT, FOOD_GIFT,
+                 EMERALD_BONUS, TEMPORARY_RESISTANCE_GIFT, EXPERIENCE_GIFT, HAPPY_ANIMALS -> true;
+            default -> false;
+        };
+    }
+
+    static MinuteEvent randomGoodEvent() {
+        MinuteEvent[] goodEvents = java.util.Arrays.stream(values())
+            .filter(MinuteEvent::isGood)
+            .toArray(MinuteEvent[]::new);
+        return goodEvents[ThreadLocalRandom.current().nextInt(goodEvents.length)];
+    }
+
     static MinuteEvent randomForCategory(EventCategory category) {
         int matchingEvents = 0;
         for (MinuteEvent event : values()) {
