@@ -1617,7 +1617,7 @@ enum MinuteEvent {
             return "Сюрприз от Minecraft №" + key.substring("EXTRA_CATASTROPHE_".length()) + " 💀";
         }
 
-        boolean good = key.startsWith("GOOD_") || key.endsWith("_GIFT") || key.endsWith("_GIFT");
+        boolean good = key.startsWith("GOOD_") || key.endsWith("_GIFT");
         boolean bad = key.startsWith("BAD_");
         String words = key.toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
         String[][] translations = {
@@ -1642,7 +1642,7 @@ enum MinuteEvent {
             {"phantoms", "фантомы"}, {"witches", "ведьмы"},
             {"husks", "кадавры"}, {"drowned", "утопленники"},
             {"slimes", "слизни"}, {"cave spiders", "пещерные пауки"},
-            {"pillagers", "разбойники"}, {"vindicators", "п vindикаторы"},
+            {"pillagers", "разбойники"}, {"vindicators", "поборники"},
             {"blazes", "ифриты"}, {"magma cubes", "магмовые кубы"},
             {"gift", "подарок"}, {"good", "хорошее событие"},
             {"bad", "неприятность"}, {"extra", "дополнительное"},
