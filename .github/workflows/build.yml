@@ -1,0 +1,33 @@
+
+name: Build Minute Events 2.0
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Build
+        run: chmod +x ./gradlew && ./gradlew --no-daemon clean build
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Minute-Events-2.0.0
+          path: build/libs/*.jar
+          if-no-files-found: error
