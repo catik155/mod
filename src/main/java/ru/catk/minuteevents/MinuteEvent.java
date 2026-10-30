@@ -1311,7 +1311,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_111(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.setSecondsOnFire(12); player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 20, 1)); return "Огненный яд! Горение и отравление!"; }
+        String apply(ServerPlayer player) { player.setRemainingFireTicks(12 * 20); player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 20, 1)); return "Огненный яд! Горение и отравление!"; }
     },
     EXTRA_CATASTROPHE_112(EventCategory.WALLS) {
         @Override
