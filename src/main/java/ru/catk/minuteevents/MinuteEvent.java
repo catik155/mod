@@ -821,405 +821,453 @@ enum MinuteEvent {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 20, 1)); player.addEffect(new MobEffectInstance(MobEffects.JUMP, 20 * 20, 1)); return "Комбо-бафф! Скорость и прыжок на 20 секунд!";
         }
     },
+    SMALL_HEALING_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            player.heal(8.0F);
+            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20 * 8, 0));
+            sparkle(player);
+            return "Добрый сюрприз: вы восстановили здоровье!";
+        }
+    },
+    FOOD_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.COOKED_BEEF, 8));
+            return "Подарок путешественника: 8 стейков!";
+        }
+    },
+    EMERALD_BONUS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.EMERALD, 4));
+            sparkle(player);
+            return "Удачная находка: 4 изумруда!";
+        }
+    },
+    TEMPORARY_RESISTANCE_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 30, 0));
+            sparkle(player);
+            return "Защитное благословение: сопротивление урону на 30 секунд!";
+        }
+    },
+    EXPERIENCE_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            player.giveExperiencePoints(30);
+            sparkle(player);
+            return "Немного опыта в подарок: +30 очков!";
+        }
+    },
+    HAPPY_ANIMALS(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.COW, EntityType.SHEEP, EntityType.CHICKEN}, 5, 3, 7);
+            sparkle(player);
+            return "Мирный зверинец! Рядом появилось животных: " + n + ".";
+        }
+    },
     EXTRA_CATASTROPHE_001(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 33); return removed > 0 ? "Катастрофа #1: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #1: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 33); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_002(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #2: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_003(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "Катастрофа #3: ловушка захлопнулась вокруг вас!" : "Катастрофа #3: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_004(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "Катастрофа #4: опасная стена перекрыла путь!" : "Катастрофа #4: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_005(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #5: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_006(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 44); return removed > 0 ? "Катастрофа #6: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #6: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 44); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_007(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #7: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_008(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "Катастрофа #8: ловушка захлопнулась вокруг вас!" : "Катастрофа #8: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_009(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "Катастрофа #9: опасная стена перекрыла путь!" : "Катастрофа #9: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_010(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #10: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_011(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 55); return removed > 0 ? "Катастрофа #11: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #11: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 55); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_012(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "Катастрофа #12: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_013(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "Катастрофа #13: ловушка захлопнулась вокруг вас!" : "Катастрофа #13: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_014(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "Катастрофа #14: опасная стена перекрыла путь!" : "Катастрофа #14: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_015(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #15: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_016(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 40); return removed > 0 ? "Катастрофа #16: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #16: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 40); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_017(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #17: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_018(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "Катастрофа #18: ловушка захлопнулась вокруг вас!" : "Катастрофа #18: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_019(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "Катастрофа #19: опасная стена перекрыла путь!" : "Катастрофа #19: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_020(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #20: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_021(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 51); return removed > 0 ? "Катастрофа #21: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #21: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 51); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_022(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "Катастрофа #22: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_023(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "Катастрофа #23: ловушка захлопнулась вокруг вас!" : "Катастрофа #23: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_024(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "Катастрофа #24: опасная стена перекрыла путь!" : "Катастрофа #24: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_025(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #25: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_026(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 35); return removed > 0 ? "Катастрофа #26: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #26: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 35); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_027(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #27: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_028(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "Катастрофа #28: ловушка захлопнулась вокруг вас!" : "Катастрофа #28: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_029(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "Катастрофа #29: опасная стена перекрыла путь!" : "Катастрофа #29: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_030(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #30: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_031(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 46); return removed > 0 ? "Катастрофа #31: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #31: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 46); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_032(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "Катастрофа #32: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_033(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "Катастрофа #33: ловушка захлопнулась вокруг вас!" : "Катастрофа #33: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_034(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "Катастрофа #34: опасная стена перекрыла путь!" : "Катастрофа #34: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_035(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #35: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_036(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 34); return removed > 0 ? "Катастрофа #36: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #36: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 34); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_037(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #37: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_038(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "Катастрофа #38: ловушка захлопнулась вокруг вас!" : "Катастрофа #38: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_039(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "Катастрофа #39: опасная стена перекрыла путь!" : "Катастрофа #39: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_040(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #40: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_041(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 42); return removed > 0 ? "Катастрофа #41: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #41: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 42); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_042(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #42: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_043(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "Катастрофа #43: ловушка захлопнулась вокруг вас!" : "Катастрофа #43: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_044(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 5); return placed > 0 ? "Катастрофа #44: опасная стена перекрыла путь!" : "Катастрофа #44: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_045(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #45: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_046(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 53); return removed > 0 ? "Катастрофа #46: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #46: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 53); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_047(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #47: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_048(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "Катастрофа #48: ловушка захлопнулась вокруг вас!" : "Катастрофа #48: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_049(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 4); return placed > 0 ? "Катастрофа #49: опасная стена перекрыла путь!" : "Катастрофа #49: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_050(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #50: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_051(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 37); return removed > 0 ? "Катастрофа #51: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #51: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 37); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_052(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #52: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_053(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "Катастрофа #53: ловушка захлопнулась вокруг вас!" : "Катастрофа #53: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_054(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 3); return placed > 0 ? "Катастрофа #54: опасная стена перекрыла путь!" : "Катастрофа #54: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_055(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #55: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_056(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 48); return removed > 0 ? "Катастрофа #56: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #56: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 48); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_057(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "Катастрофа #57: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_058(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "Катастрофа #58: ловушка захлопнулась вокруг вас!" : "Катастрофа #58: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_059(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 5); return placed > 0 ? "Катастрофа #59: опасная стена перекрыла путь!" : "Катастрофа #59: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_060(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #60: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_061(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 37); return removed > 0 ? "Катастрофа #61: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #61: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 37); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_062(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #62: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_063(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "Катастрофа #63: ловушка захлопнулась вокруг вас!" : "Катастрофа #63: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_064(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "Катастрофа #64: опасная стена перекрыла путь!" : "Катастрофа #64: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_065(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #65: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_066(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 44); return removed > 0 ? "Катастрофа #66: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #66: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 44); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_067(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "Катастрофа #67: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_068(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "Катастрофа #68: ловушка захлопнулась вокруг вас!" : "Катастрофа #68: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_069(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "Катастрофа #69: опасная стена перекрыла путь!" : "Катастрофа #69: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_070(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #70: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_071(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 55); return removed > 0 ? "Катастрофа #71: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #71: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 55); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_072(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #72: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_073(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "Катастрофа #73: ловушка захлопнулась вокруг вас!" : "Катастрофа #73: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_074(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "Катастрофа #74: опасная стена перекрыла путь!" : "Катастрофа #74: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_075(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #75: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
     },
     EXTRA_CATASTROPHE_076(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 40); return removed > 0 ? "Катастрофа #76: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #76: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 40); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_077(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "Катастрофа #77: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_078(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "Катастрофа #78: ловушка захлопнулась вокруг вас!" : "Катастрофа #78: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_079(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "Катастрофа #79: опасная стена перекрыла путь!" : "Катастрофа #79: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_080(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #80: вас сковало замедление!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 45, 1)); return "вас сковало замедление!"; }
     },
     EXTRA_CATASTROPHE_081(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 51); return removed > 0 ? "Катастрофа #81: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #81: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 51); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_082(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #82: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_083(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "Катастрофа #83: ловушка захлопнулась вокруг вас!" : "Катастрофа #83: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBBLESTONE.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_084(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "Катастрофа #84: опасная стена перекрыла путь!" : "Катастрофа #84: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_085(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "Катастрофа #85: ядовитый воздух!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 30, 1)); return "ядовитый воздух!"; }
     },
     EXTRA_CATASTROPHE_086(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 39); return removed > 0 ? "Катастрофа #86: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #86: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 39); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_087(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #87: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_088(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "Катастрофа #88: ловушка захлопнулась вокруг вас!" : "Катастрофа #88: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.IRON_BARS.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_089(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "Катастрофа #89: опасная стена перекрыла путь!" : "Катастрофа #89: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_090(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "Катастрофа #90: внезапная слабость!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 54, 1)); return "внезапная слабость!"; }
     },
     EXTRA_CATASTROPHE_091(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 46); return removed > 0 ? "Катастрофа #91: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #91: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 46); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_092(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "Катастрофа #92: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_093(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "Катастрофа #93: ловушка захлопнулась вокруг вас!" : "Катастрофа #93: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.COBWEB.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_094(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "Катастрофа #94: опасная стена перекрыла путь!" : "Катастрофа #94: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_095(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "Катастрофа #95: земля будто тянет руки вниз!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * 45, 1)); return "земля будто тянет руки вниз!"; }
     },
     EXTRA_CATASTROPHE_096(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 31); return removed > 0 ? "Катастрофа #96: ударная волна уничтожила блоков: " + removed + "!" : "Катастрофа #96: ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 31); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_097(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "Катастрофа #97: в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_098(EventCategory.CAGES) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "Катастрофа #98: ловушка захлопнулась вокруг вас!" : "Катастрофа #98: ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildCage(player.serverLevel(), player.blockPosition(), Blocks.OBSIDIAN.defaultBlockState()); return placed > 0 ? "ловушка захлопнулась вокруг вас!" : "ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_099(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "Катастрофа #99: опасная стена перекрыла путь!" : "Катастрофа #99: стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
-        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "Катастрофа #100: внезапная тьма ослепляет вас!"; }
+        String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
     };
 
     private final EventCategory category;
