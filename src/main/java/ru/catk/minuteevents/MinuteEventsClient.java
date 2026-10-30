@@ -17,6 +17,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
     private static String currentMessage;
     private static long shownAtNanos;
     private static int secondsUntilEvent = 60;
+    private static String timerDetail = "Шансы категорий";
 
     @Override
     public void onInitializeClient() {
@@ -26,7 +27,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
         );
         ClientPlayNetworking.registerGlobalReceiver(
             EventTimerPayload.TYPE,
-            (payload, context) -> secondsUntilEvent = payload.secondsRemaining()
+            (payload, context) -> { secondsUntilEvent = payload.secondsRemaining(); timerDetail = payload.detail(); }
         );
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
     }
@@ -41,7 +42,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
         if (client.player == null) {
             return;
         }
-        String timerText = String.format(java.util.Locale.ROOT, "Следующее событие: %02d:%02d", secondsUntilEvent / 60, secondsUntilEvent % 60);
+        String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d | %s", secondsUntilEvent / 60, secondsUntilEvent % 60, timerDetail);
         int timerWidth = client.font.width(timerText);
         graphics.fill(client.getWindow().getGuiScaledWidth() - timerWidth - 20, 8, client.getWindow().getGuiScaledWidth() - 8, 25, 0xB9161920);
         graphics.drawString(client.font, timerText, client.getWindow().getGuiScaledWidth() - timerWidth - 14, 13, 0xFFFFC66D, false);
