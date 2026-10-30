@@ -1607,8 +1607,63 @@ enum MinuteEvent {
             case HORSE_DELIVERY -> "Доставка лошадей";
             case CAT_VISIT -> "Котики пришли";
             case VILLAGER_MEETING -> "Собрание жителей";
-            default -> name().toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+            default -> localizedFallbackName();
         };
+    }
+
+    private String localizedFallbackName() {
+        String key = name();
+        if (key.startsWith("EXTRA_CATASTROPHE_")) {
+            return "Сюрприз от Minecraft №" + key.substring("EXTRA_CATASTROPHE_".length()) + " 💀";
+        }
+
+        boolean good = key.startsWith("GOOD_") || key.endsWith("_GIFT") || key.endsWith("_GIFT");
+        boolean bad = key.startsWith("BAD_");
+        String words = key.toLowerCase(java.util.Locale.ROOT).replace('_', ' ');
+        String[][] translations = {
+            {"cooked beef", "жареная говядина"}, {"golden carrots", "золотая морковь"},
+            {"golden apples", "золотые яблоки"}, {"diamonds", "алмазы"},
+            {"emeralds", "изумруды"}, {"iron ingots", "железные слитки"},
+            {"gold ingots", "золотые слитки"}, {"obsidian", "обсидиан"},
+            {"ender pearls", "жемчуг Края"}, {"experience", "опыт"},
+            {"totem", "тотем"}, {"enchanted golden apple", "зачарованное золотое яблоко"},
+            {"diamond pickaxe", "алмазная кирка"}, {"bread", "хлеб"},
+            {"cobblestone", "булыжник"}, {"torches", "факелы"},
+            {"ender chest", "эндер-сундук"}, {"regeneration", "регенерация"},
+            {"resistance", "сопротивление"}, {"strength", "сила"},
+            {"speed", "скорость"}, {"absorption", "поглощение"},
+            {"hunger", "голод"}, {"mining fatigue", "усталость шахтёра"},
+            {"nausea", "тошнота"}, {"blindness", "слепота"},
+            {"weakness", "слабость"}, {"poison", "отравление"},
+            {"wither", "иссушение"}, {"slowness", "замедление"},
+            {"levitation", "левитация"}, {"darkness", "тьма"},
+            {"creepers", "криперы"}, {"zombies", "зомби"},
+            {"skeletons", "скелеты"}, {"spiders", "пауки"},
+            {"phantoms", "фантомы"}, {"witches", "ведьмы"},
+            {"husks", "кадавры"}, {"drowned", "утопленники"},
+            {"slimes", "слизни"}, {"cave spiders", "пещерные пауки"},
+            {"pillagers", "разбойники"}, {"vindicators", "п vindикаторы"},
+            {"blazes", "ифриты"}, {"magma cubes", "магмовые кубы"},
+            {"gift", "подарок"}, {"good", "хорошее событие"},
+            {"bad", "неприятность"}, {"extra", "дополнительное"},
+            {"temporary", "временное"}, {"small", "маленький"},
+            {"large", "большой"}, {"random", "случайный"},
+            {"animals", "животные"}, {"animal", "животное"},
+            {"resistance", "сопротивление"}, {"fire", "огонь"},
+            {"water", "вода"}, {"breathing", "дыхание"},
+            {"invisibility", "невидимость"}, {"night vision", "ночное зрение"},
+            {"saturation", "сытость"}, {"gold", "золото"},
+            {"iron", "железо"}, {"arrow", "стрела"}, {"arrows", "стрелы"},
+            {"bow", "лук"}, {"shield", "щит"}, {"sword", "меч"},
+            {"experience bottles", "бутылочки опыта"}, {"cache", "тайник"},
+            {"bonus", "бонус"}, {"happy", "счастливые"}
+        };
+        for (String[] pair : translations) {
+            words = words.replace(pair[0], pair[1]);
+        }
+        if (good) return "Халява подъехала: " + words + " 😎";
+        if (bad) return "Ну всё, приехали: " + words + " 💀";
+        return words.substring(0, 1).toUpperCase(java.util.Locale.forLanguageTag("ru-RU")) + words.substring(1);
     }
 
     EventCategory category() { return category; }
