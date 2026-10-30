@@ -171,7 +171,15 @@ public final class MinuteEventsMod implements ModInitializer {
         return 1;
     }
 
-    private int setTimerVisible(CommandSourceStack source, boolean value) {\n        timerVisible = value;\n        source.sendSuccess(() -> Component.literal(value\n            ? "Таймер HUD включён."\n            : "Таймер HUD выключен. Включить снова: /minuteevent timer on"), true);\n        return 1;\n    }\n\n    private String timerDisplayFor(ServerPlayer player) {
+    private int setTimerVisible(CommandSourceStack source, boolean value) {
+        timerVisible = value;
+        source.sendSuccess(() -> Component.literal(value
+            ? "Таймер HUD включён."
+            : "Таймер HUD выключен. Включить снова: /minuteevent timer on"), true);
+        return 1;
+    }
+
+    private String timerDisplayFor(ServerPlayer player) {
         if (blindMode) {
             return "Событие скрыто";
         }
