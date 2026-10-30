@@ -722,25 +722,25 @@ enum MinuteEvent {
     ZOMBIE_HORDE(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE}, 10, 5, 12); return "АПОКАЛИПСИС! Орда из 10 зомби: " + n + "!";
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE}, 30, 6, 14); return "АПОКАЛИПСИС! Орда из 10 зомби: " + n + "!";
         }
     },
     SKELETON_AMBUSH(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SKELETON}, 8, 4, 10); return "Лучники окружают вас! Скелетов: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SKELETON}, 24, 6, 14); return "Лучники окружают вас! Скелетов: " + n;
         }
     },
     SPIDER_NEST(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SPIDER}, 8, 3, 8); return "Вы потревожили паучье гнездо! Пауков: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SPIDER}, 24, 5, 12); return "Вы потревожили паучье гнездо! Пауков: " + n;
         }
     },
     MIXED_MONSTER_WAVE(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 8, 5, 12); return "Волна монстров! Врагов появилось: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 32, 7, 16); return "Волна монстров! Врагов появилось: " + n;
         }
     },
     RANDOM_ANIMAL_PARTY(EventCategory.OTHER) {
@@ -758,19 +758,19 @@ enum MinuteEvent {
     CAVE_SPIDER_NEST(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.CAVE_SPIDER}, 5, 4, 9); return "Ядовитые пауки выползли из темноты: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.CAVE_SPIDER}, 18, 5, 12); return "Ядовитые пауки выползли из темноты: " + n;
         }
     },
     STRAY_SQUAD(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.STRAY}, 5, 5, 10); return "Ледяные лучники атакуют: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.STRAY}, 18, 6, 13); return "Ледяные лучники атакуют: " + n;
         }
     },
     HUSK_SQUAD(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.HUSK}, 6, 4, 9); return "Песчаная нежить вышла из укрытий: " + n;
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.HUSK}, 20, 5, 12); return "Песчаная нежить вышла из укрытий: " + n;
         }
     },
     MAGMA_CUBE_PACK(EventCategory.OTHER) {
