@@ -195,10 +195,10 @@ public final class MinuteEventsMod implements ModInitializer {
                     .reversed()
                     .thenComparing(MinuteEvent::displayName))
                 .limit(3)
-                .forEach(event -> display.append("\\n")
+                .forEach(event -> display.append("\n")
                     .append(event.displayName())
                     .append(" — ")
-                    .append(String.format(java.util.Locale.ROOT, "%.3f%%", eventChance(event, badStreak))));
+                    .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", eventChance(event, badStreak))));
             return display.toString();
         }
         return "Точные шансы: /minuteevent chances";
@@ -262,7 +262,7 @@ public final class MinuteEventsMod implements ModInitializer {
                 }
                 chance = (double) categoryChance / Math.max(1, counts.getOrDefault(category, 1));
             }
-            String line = String.format(java.util.Locale.ROOT, "%s — %.3f%%", event.displayName(), chance);
+            String line = String.format(java.util.Locale.forLanguageTag("ru-RU"), "%s — %.1f%%", event.displayName(), chance);
             source.sendSuccess(() -> Component.literal(line), false);
         }
         return 1;
