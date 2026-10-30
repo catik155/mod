@@ -23,6 +23,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -37,6 +40,8 @@ public final class MinuteEventsMod implements ModInitializer {
     private boolean enabled = true;
     private int intervalSeconds = DEFAULT_INTERVAL_SECONDS;
     private int elapsedTicks;
+    private int timerSyncTicks;
+    private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
     private Path configPath;
     private final EnumMap<EventCategory, Boolean> categoryEnabled = defaultCategoryEnabled();
     private final EnumMap<EventCategory, Integer> categoryChances = defaultCategoryChances();
@@ -49,6 +54,10 @@ public final class MinuteEventsMod implements ModInitializer {
             EventNotificationPayload.TYPE,
             EventNotificationPayload.CODEC
         );
+        PayloadTypeRegistry.playS2C().register(
+            EventTimerPayload.TYPE,
+            EventTimerPayload.CODEC
+        );
         registerCommands();
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -57,6 +66,16 @@ public final class MinuteEventsMod implements ModInitializer {
             }
 
             elapsedTicks++;
+            timerSyncTicks++;
+            if (timerSyncTicks >= TICKS_PER_SECOND) {
+                timerSyncTicks = 0;
+                int remaining = Math.max(0, intervalSeconds - elapsedTicks / TICKS_PER_SECOND);
+                for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                    if (ServerPlayNetworking.canSend(player, EventTimerPayload.TYPE)) {
+                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining));
+                    }
+                }
+            }
             if (elapsedTicks >= intervalSeconds * TICKS_PER_SECOND) {
                 elapsedTicks = 0;
                 triggerEvents(server);
@@ -225,8 +244,20 @@ public final class MinuteEventsMod implements ModInitializer {
 
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            MinuteEvent event = selectEvent();
+            MinuteEvent event;
+            int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
+            if (badStreak >= 3) {
+                event = MinuteEvent.randomGoodEvent();
+                badEventStreaks.put(player.getUUID(), 0);
+            } else {
+                event = selectEvent();
+            }
             String description = event.apply(player);
+            if (event.isGood()) {
+                badEventStreaks.put(player.getUUID(), 0);
+            } else {
+                badEventStreaks.put(player.getUUID(), badStreak + 1);
+            }
             if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
                 ServerPlayNetworking.send(player, new EventNotificationPayload(description));
             } else {
