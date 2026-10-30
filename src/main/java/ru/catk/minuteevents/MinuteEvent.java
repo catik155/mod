@@ -1268,7 +1268,7 @@ enum MinuteEvent {
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) { player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 36, 1)); return "внезапная тьма ослепляет вас!"; }
-,
+    },
     EXTRA_CATASTROPHE_101(EventCategory.BLOCKS) {
         @Override
         String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 4, 9).below(), 4); return "Мега-взрыв! Разрушено блоков: " + n; }
