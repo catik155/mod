@@ -43,6 +43,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private int timerSyncTicks;
     private boolean previewMode = false;
     private boolean blindMode = false;
+    private boolean timerVisible = true;
     private final Map<UUID, MinuteEvent> upcomingEvents = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
     private Path configPath;
@@ -75,7 +76,7 @@ public final class MinuteEventsMod implements ModInitializer {
                 int remaining = Math.max(0, intervalSeconds - elapsedTicks / TICKS_PER_SECOND);
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                     if (ServerPlayNetworking.canSend(player, EventTimerPayload.TYPE)) {
-                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining, timerDisplayFor(player)));
+                        ServerPlayNetworking.send(player, new EventTimerPayload(remaining, timerVisible ? timerDisplayFor(player) : "__HIDE_TIMER__"));
                     }
                 }
             }
@@ -100,6 +101,12 @@ public final class MinuteEventsMod implements ModInitializer {
                         .executes(context -> setDisplayMode(context.getSource(), "chance")))
                     .then(Commands.literal("blind")
                         .executes(context -> setDisplayMode(context.getSource(), "blind"))))
+                .then(Commands.literal("timer")
+                    .requires(source -> source.hasPermission(2))
+                    .then(Commands.literal("on")
+                        .executes(context -> setTimerVisible(context.getSource(), true)))
+                    .then(Commands.literal("off")
+                        .executes(context -> setTimerVisible(context.getSource(), false))))
                 .then(Commands.literal("status")
                     .executes(context -> showStatus(context.getSource())))
                 .then(Commands.literal("on")
@@ -164,9 +171,9 @@ public final class MinuteEventsMod implements ModInitializer {
         return 1;
     }
 
-    private String timerDisplayFor(ServerPlayer player) {
+    private int setTimerVisible(CommandSourceStack source, boolean value) {\n        timerVisible = value;\n        source.sendSuccess(() -> Component.literal(value\n            ? "Таймер HUD включён."\n            : "Таймер HUD выключен. Включить снова: /minuteevent timer on"), true);\n        return 1;\n    }\n\n    private String timerDisplayFor(ServerPlayer player) {
         if (blindMode) {
-            return "Слепой режим";
+            return "Событие скрыто";
         }
         if (previewMode) {
             MinuteEvent event = upcomingEvents.computeIfAbsent(player.getUUID(), ignored -> {
