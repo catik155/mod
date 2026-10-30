@@ -722,25 +722,25 @@ enum MinuteEvent {
     ZOMBIE_HORDE(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE}, 30, 6, 14); return "АПОКАЛИПСИС! Орда из 10 зомби: " + n + "!";
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE}, 30, 6, 14); return "АПОКАЛИПСИС! Орда из 10 зомби: " + n + "!";
         }
     },
     SKELETON_AMBUSH(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SKELETON}, 24, 6, 14); return "Лучники окружают вас! Скелетов: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.SKELETON}, 24, 6, 14); return "Лучники окружают вас! Скелетов: " + n;
         }
     },
     SPIDER_NEST(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SPIDER}, 24, 5, 12); return "Вы потревожили паучье гнездо! Пауков: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.SPIDER}, 24, 5, 12); return "Вы потревожили паучье гнездо! Пауков: " + n;
         }
     },
     MIXED_MONSTER_WAVE(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 32, 7, 16); return "Волна монстров! Врагов появилось: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 32, 7, 16); return "Волна монстров! Врагов появилось: " + n;
         }
     },
     RANDOM_ANIMAL_PARTY(EventCategory.OTHER) {
@@ -758,19 +758,19 @@ enum MinuteEvent {
     CAVE_SPIDER_NEST(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.CAVE_SPIDER}, 18, 5, 12); return "Ядовитые пауки выползли из темноты: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CAVE_SPIDER}, 18, 5, 12); return "Ядовитые пауки выползли из темноты: " + n;
         }
     },
     STRAY_SQUAD(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.STRAY}, 18, 6, 13); return "Ледяные лучники атакуют: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.STRAY}, 18, 6, 13); return "Ледяные лучники атакуют: " + n;
         }
     },
     HUSK_SQUAD(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = spawnGroup(player, new EntityType<?>[] {EntityType.HUSK}, 20, 5, 12); return "Песчаная нежить вышла из укрытий: " + n;
+            int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.HUSK}, 20, 5, 12); return "Песчаная нежить вышла из укрытий: " + n;
         }
     },
     MAGMA_CUBE_PACK(EventCategory.OTHER) {
@@ -875,7 +875,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_002(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_003(EventCategory.CAGES) {
         @Override
@@ -895,7 +895,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_007(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_008(EventCategory.CAGES) {
         @Override
@@ -915,7 +915,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_012(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_013(EventCategory.CAGES) {
         @Override
@@ -935,7 +935,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_017(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_018(EventCategory.CAGES) {
         @Override
@@ -955,7 +955,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_022(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_023(EventCategory.CAGES) {
         @Override
@@ -975,7 +975,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_027(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_028(EventCategory.CAGES) {
         @Override
@@ -995,7 +995,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_032(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_033(EventCategory.CAGES) {
         @Override
@@ -1015,7 +1015,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_037(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_038(EventCategory.CAGES) {
         @Override
@@ -1035,7 +1035,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_042(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_043(EventCategory.CAGES) {
         @Override
@@ -1055,7 +1055,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_047(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_048(EventCategory.CAGES) {
         @Override
@@ -1075,7 +1075,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_052(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_053(EventCategory.CAGES) {
         @Override
@@ -1095,7 +1095,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_057(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 18, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_058(EventCategory.CAGES) {
         @Override
@@ -1115,7 +1115,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_062(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_063(EventCategory.CAGES) {
         @Override
@@ -1135,7 +1135,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_067(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 20, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_068(EventCategory.CAGES) {
         @Override
@@ -1155,7 +1155,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_072(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_073(EventCategory.CAGES) {
         @Override
@@ -1175,7 +1175,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_077(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 22, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_078(EventCategory.CAGES) {
         @Override
@@ -1195,7 +1195,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_082(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_083(EventCategory.CAGES) {
         @Override
@@ -1215,7 +1215,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_087(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_088(EventCategory.CAGES) {
         @Override
@@ -1235,7 +1235,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_092(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 16, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_093(EventCategory.CAGES) {
         @Override
@@ -1255,7 +1255,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_097(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int spawned = spawnGroup(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
+        String apply(ServerPlayer player) { int spawned = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER}, 24, 5, 12); return "в округе появилось враждебных мобов: " + spawned + "!"; }
     },
     EXTRA_CATASTROPHE_098(EventCategory.CAGES) {
         @Override
@@ -1275,7 +1275,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_102(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.ZOMBIE}, 22, 5, 13); return "Взрывная орда преследует вас: " + n + " мобов!"; }
+        String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.ZOMBIE}, 22, 5, 13); return "Взрывная орда преследует вас: " + n + " мобов!"; }
     },
     EXTRA_CATASTROPHE_103(EventCategory.OTHER) {
         @Override
@@ -1347,7 +1347,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
-        String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
+        String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
     };
 
     private final EventCategory category;
@@ -1620,6 +1620,21 @@ enum MinuteEvent {
         }
 
         return placed;
+    }
+
+    private static int spawnHordeIfAnotherPlayerNearby(
+        ServerPlayer player,
+        EntityType<?>[] types,
+        int amount,
+        int minDistance,
+        int maxDistance
+    ) {
+        boolean anotherPlayerNearby = player.serverLevel().players().stream()
+            .anyMatch(other -> other != player && other.distanceToSqr(player) <= 32.0 * 32.0);
+        if (!anotherPlayerNearby) {
+            return 0;
+        }
+        return spawnGroup(player, types, amount, minDistance, maxDistance);
     }
 
     private static int spawnGroup(
