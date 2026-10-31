@@ -103,6 +103,8 @@ public final class MinuteEventsMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
             dispatcher.register(Commands.literal("minuteevent")
                 .executes(context -> showStatus(context.getSource()))
+                .then(Commands.literal("help")
+                    .executes(context -> showHelp(context.getSource())))
                 .then(Commands.literal("mode")
                     .requires(source -> source.hasPermission(2))
                     .then(Commands.literal("preview")
@@ -207,7 +209,14 @@ public final class MinuteEventsMod implements ModInitializer {
             }
             return display.toString();
         }
-        return "Точные шансы: /minuteevent chances";
+        java.util.List<EventCandidate> candidates = candidatesFor(player);
+        int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+        StringBuilder display = new StringBuilder("Шансы следующего события:");
+        for (EventCandidate candidate : candidates) {
+            display.append("\\n").append(candidate.event().displayName()).append(" — ")
+                .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
+        }
+        return display.toString();
     }
 
     private double eventChance(MinuteEvent event, int badStreak) {
@@ -235,41 +244,39 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private int showEventChances(CommandSourceStack source) {
-        ServerPlayer player = source.getEntity() instanceof ServerPlayer serverPlayer ? serverPlayer : null;
-        int badStreak = player == null ? 0 : badEventStreaks.getOrDefault(player.getUUID(), 0);
-        EnumMap<EventCategory, Integer> counts = new EnumMap<>(EventCategory.class);
-        int goodCount = 0;
-        for (MinuteEvent event : MinuteEvent.values()) {
-            counts.merge(event.category(), 1, Integer::sum);
-            if (event.isGood()) goodCount++;
+        if (!(source.getEntity() instanceof ServerPlayer player)) {
+            source.sendFailure(Component.literal("Эта команда показывает персональные шансы игрока. Выполните её в игре."));
+            return 0;
         }
-        source.sendSuccess(() -> Component.literal("Точные шансы следующего события:"), false);
-        if (badStreak >= 3) {
-            source.sendSuccess(() -> Component.literal("После 3 плохих событий гарантируется хорошее."), false);
-        }
-        for (MinuteEvent event : MinuteEvent.values()) {
-            double chance;
-            if (badStreak >= 3) {
-                chance = event.isGood() ? 100.0 / Math.max(1, goodCount) : 0.0;
-            } else {
-                EventCategory category = event.category();
-                int categoryChance;
-                if (category == EventCategory.OTHER) {
-                    int configured = 0;
-                    for (EventCategory configuredCategory : EventCategory.configurableValues()) {
-                        if (categoryEnabled.getOrDefault(configuredCategory, true)) {
-                            configured += categoryChances.getOrDefault(configuredCategory, configuredCategory.defaultChance());
-                        }
-                    }
-                    categoryChance = Math.max(0, 100 - configured);
-                } else {
-                    categoryChance = categoryEnabled.getOrDefault(category, true)
-                        ? categoryChances.getOrDefault(category, category.defaultChance()) : 0;
-                }
-                chance = (double) categoryChance / Math.max(1, counts.getOrDefault(category, 1));
-            }
-            String line = String.format(java.util.Locale.forLanguageTag("ru-RU"), "%s — %.1f%%", event.displayName(), chance);
+        java.util.List<EventCandidate> candidates = candidatesFor(player);
+        int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+        source.sendSuccess(() -> Component.literal("Точные шансы 10 событий, подготовленных именно для вас:"), false);
+        for (EventCandidate candidate : candidates) {
+            String line = String.format(java.util.Locale.forLanguageTag("ru-RU"), "%s — %.1f%%", candidate.event().displayName(), candidate.percent(totalWeight));
             source.sendSuccess(() -> Component.literal(line), false);
+        }
+        if (badEventStreaks.getOrDefault(player.getUUID(), 0) >= 3) {
+            source.sendSuccess(() -> Component.literal("Гарантия хорошего события активна: в этом наборе только хорошие события."), false);
+        }
+        return 1;
+    }
+
+    private int showHelp(CommandSourceStack source) {
+        source.sendSuccess(() -> Component.literal("§6/minuteevent — статус событий"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent help §7— список команд"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent status §7— статус и настройки"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent chances §7— точные шансы 10 событий для вас"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode preview §7— названия возможных событий в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode chance §7— точные проценты событий в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode blind §7— скрыть информацию о событии"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent timer on|off §7— показать/скрыть таймер HUD"), false);
+        if (source.hasPermission(2)) {
+            source.sendSuccess(() -> Component.literal("§6Команды администратора:"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent on|off §7— включить/выключить события"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent now §7— запустить событие сейчас"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent interval <секунды> §7— интервал 10–3600 секунд"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent category <blocks|cages|walls|mobs> <on|off> §7— категория"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent chance <категория> <0–100> §7— шанс категории"), false);
         }
         return 1;
     }
