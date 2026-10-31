@@ -49,6 +49,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private boolean blindMode = false;
     private boolean timerVisible = true;
     private final Map<UUID, java.util.List<EventCandidate>> upcomingCandidates = new HashMap<>();
+    private final Map<UUID, MinuteEvent> upcomingSelected = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
 
     private record EventCandidate(MinuteEvent event, int weight) {
@@ -176,6 +177,7 @@ public final class MinuteEventsMod implements ModInitializer {
         previewMode = mode.equals("preview");
         blindMode = mode.equals("blind");
         upcomingCandidates.clear();
+        upcomingSelected.clear();
         String message = switch (mode) {
             case "preview" -> "Режим предпросмотра включён: таймер показывает следующее событие.";
             case "blind" -> "Слепой режим включён: видно только время до события.";
@@ -209,14 +211,12 @@ public final class MinuteEventsMod implements ModInitializer {
             }
             return display.toString();
         }
-        java.util.List<EventCandidate> candidates = candidatesFor(player);
-        int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
-        StringBuilder display = new StringBuilder("Шансы следующего события:");
-        for (EventCandidate candidate : candidates) {
-            display.append("\\n").append(candidate.event().displayName()).append(" — ")
-                .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
+        MinuteEvent selected = upcomingSelected.get(player.getUUID());
+        if (selected == null) {
+            candidatesFor(player);
+            selected = upcomingSelected.get(player.getUUID());
         }
-        return display.toString();
+        return selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName();
     }
 
     private double eventChance(MinuteEvent event, int badStreak) {
@@ -266,8 +266,8 @@ public final class MinuteEventsMod implements ModInitializer {
         source.sendSuccess(() -> Component.literal("§e/minuteevent help §7— список команд"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent status §7— статус и настройки"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent chances §7— точные шансы 10 событий для вас"), false);
-        source.sendSuccess(() -> Component.literal("§e/minuteevent mode preview §7— названия возможных событий в HUD"), false);
-        source.sendSuccess(() -> Component.literal("§e/minuteevent mode chance §7— точные проценты событий в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode preview §7— список событий и их шансы в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode chance §7— показывает конкретное следующее событие в HUD"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent mode blind §7— скрыть информацию о событии"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent timer on|off §7— показать/скрыть таймер HUD"), false);
         if (source.hasPermission(2)) {
@@ -391,32 +391,33 @@ public final class MinuteEventsMod implements ModInitializer {
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             java.util.List<EventCandidate> candidates = candidatesFor(player);
-            int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
-            int roll = ThreadLocalRandom.current().nextInt(Math.max(1, totalWeight));
-            MinuteEvent event = candidates.get(0).event();
-            for (EventCandidate candidate : candidates) {
-                roll -= candidate.weight();
-                if (roll < 0) {
-                    event = candidate.event();
-                    break;
-                }
+            MinuteEvent event = upcomingSelected.get(player.getUUID());
+            if (event == null) {
+                event = chooseWeightedCandidate(candidates);
             }
             upcomingCandidates.remove(player.getUUID());
+            upcomingSelected.remove(player.getUUID());
             int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
             badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
             String description = event.apply(player);
             if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
                 ServerPlayNetworking.send(player, new EventNotificationPayload(description));
             } else {
-                player.displayClientMessage(
-                    Component.literal("[Минутное событие] " + description),
-                    true
-                );
+                player.displayClientMessage(Component.literal("[Минутное событие] " + description), true);
             }
         }
     }
 
 
+    private MinuteEvent chooseWeightedCandidate(java.util.List<EventCandidate> candidates) {
+        int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+        int roll = ThreadLocalRandom.current().nextInt(Math.max(1, totalWeight));
+        for (EventCandidate candidate : candidates) {
+            roll -= candidate.weight();
+            if (roll < 0) return candidate.event();
+        }
+        return candidates.get(0).event();
+    }
     private java.util.List<EventCandidate> candidatesFor(ServerPlayer player) {
         return upcomingCandidates.computeIfAbsent(player.getUUID(), ignored -> {
             boolean forceGood = badEventStreaks.getOrDefault(player.getUUID(), 0) >= 3;
@@ -448,7 +449,9 @@ public final class MinuteEventsMod implements ModInitializer {
             for (MinuteEvent candidate : chosen) {
                 weighted.add(new EventCandidate(candidate, ThreadLocalRandom.current().nextInt(1, 101)));
             }
-            return java.util.List.copyOf(weighted);
+            java.util.List<EventCandidate> result = java.util.List.copyOf(weighted);
+            upcomingSelected.put(player.getUUID(), chooseWeightedCandidate(result));
+            return result;
         });
     }
 
