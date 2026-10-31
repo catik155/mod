@@ -85,8 +85,8 @@ public final class MinuteEventsClient implements ClientModInitializer {
                 ? Math.max(112, client.font.width("00:00") + 48)
                 : 0;
 
-            if (timerVisible && !lastEvent.isBlank()) {
-                int panelX = 7 + timerWidth + 8;
+            if (!lastEvent.isBlank()) {
+                int panelX = timerVisible ? 7 + timerWidth + 8 : 7;
                 int availableWidth = Math.max(90, screenWidth - panelX - 7);
                 List<FormattedCharSequence> lastLines = client.font.split(
                     Component.literal(lastEvent), Math.max(70, availableWidth - 20)
@@ -94,10 +94,11 @@ public final class MinuteEventsClient implements ClientModInitializer {
                 int panelWidth = Math.min(availableWidth,
                     Math.max(130, lastLines.stream().mapToInt(client.font::width).max().orElse(100) + 20));
                 int panelHeight = Math.max(24, lastLines.size() * 10 + 14);
-                graphics.fill(panelX, 7, panelX + panelWidth, 7 + panelHeight, 0xE8101724);
-                graphics.fill(panelX, 7, panelX + 2, 7 + panelHeight, 0xFF54D6A0);
+                int panelTop = timerVisible ? 7 : 8;
+                graphics.fill(panelX, panelTop, panelX + panelWidth, panelTop + panelHeight, 0xE8101724);
+                graphics.fill(panelX, panelTop, panelX + 2, panelTop + panelHeight, 0xFF54D6A0);
                 for (int i = 0; i < lastLines.size(); i++) {
-                    graphics.drawString(client.font, lastLines.get(i), panelX + 10, 14 + i * 10, 0xFFF1F4F8, false);
+                    graphics.drawString(client.font, lastLines.get(i), panelX + 10, panelTop + 7 + i * 10, 0xFFF1F4F8, false);
                 }
             }
 
@@ -108,7 +109,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
                 int detailHeight = Math.max(24, detailLines.size() * 10 + 22);
                 int detailWidth = Math.min(DETAIL_WIDTH,
                     Math.max(150, detailLines.stream().mapToInt(client.font::width).max().orElse(120) + 24));
-                int top = timerVisible ? 36 : 8;
+                int top = timerVisible || !lastEvent.isBlank() ? 36 : 8;
                 graphics.fill(7, top, 7 + detailWidth, top + detailHeight, 0xE8101724);
                 graphics.fill(7, top, 7 + detailWidth, top + 2, 0xFF54D6A0);
                 graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 7, 0xFF70DDB5, false);
