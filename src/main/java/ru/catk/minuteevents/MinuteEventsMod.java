@@ -48,7 +48,14 @@ public final class MinuteEventsMod implements ModInitializer {
     private boolean previewMode = false;
     private boolean blindMode = false;
     private boolean timerVisible = true;
-    private final Map<UUID, MinuteEvent> upcomingEvents = new HashMap<>();
+    private final Map<UUID, java.util.List<EventCandidate>> upcomingCandidates = new HashMap<>();
+    private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
+
+    private record EventCandidate(MinuteEvent event, int weight) {
+        double percent(int totalWeight) {
+            return totalWeight == 0 ? 0.0 : weight * 100.0 / totalWeight;
+        }
+    }
     private Path configPath;
     private final EnumMap<EventCategory, Boolean> categoryEnabled = defaultCategoryEnabled();
     private final EnumMap<EventCategory, Integer> categoryChances = defaultCategoryChances();
@@ -166,7 +173,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private int setDisplayMode(CommandSourceStack source, String mode) {
         previewMode = mode.equals("preview");
         blindMode = mode.equals("blind");
-        upcomingEvents.clear();
+        upcomingCandidates.clear();
         String message = switch (mode) {
             case "preview" -> "Режим предпросмотра включён: таймер показывает следующее событие.";
             case "blind" -> "Слепой режим включён: видно только время до события.";
@@ -189,19 +196,15 @@ public final class MinuteEventsMod implements ModInitializer {
             return "Событие скрыто";
         }
         if (previewMode) {
-            int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
-            StringBuilder display = new StringBuilder("Топ-3 вероятных события:");
-            java.util.Arrays.stream(MinuteEvent.values())
-                .filter(event -> badStreak < 3 || event.isGood())
-                .sorted(java.util.Comparator
-                    .comparingDouble((MinuteEvent event) -> eventChance(event, badStreak))
-                    .reversed()
-                    .thenComparing(MinuteEvent::displayName))
-                .limit(3)
-                .forEach(event -> display.append("\n")
-                    .append(event.displayName())
+            java.util.List<EventCandidate> candidates = candidatesFor(player);
+            int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+            StringBuilder display = new StringBuilder("10 возможных событий:");
+            for (EventCandidate candidate : candidates) {
+                display.append("\\n")
+                    .append(candidate.event().displayName())
                     .append(" — ")
-                    .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", eventChance(event, badStreak))));
+                    .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
+            }
             return display.toString();
         }
         return "Точные шансы: /minuteevent chances";
@@ -380,20 +383,20 @@ public final class MinuteEventsMod implements ModInitializer {
 
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            MinuteEvent event;
-            // Специальные события измерений/биомов — редкая особенность места, а не постоянный пул.
-            // В остальных случаях выбирается обычное событие с учётом настроек категорий.
-            if (ThreadLocalRandom.current().nextInt(100) < 30) {
-                if (player.serverLevel().dimension() == Level.NETHER) {
-                    event = randomNetherEvent(player);
-                } else if (player.serverLevel().dimension() == Level.END) {
-                    event = randomEndEvent(player);
-                } else {
-                    event = randomOverworldEvent(player);
+            java.util.List<EventCandidate> candidates = candidatesFor(player);
+            int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+            int roll = ThreadLocalRandom.current().nextInt(Math.max(1, totalWeight));
+            MinuteEvent event = candidates.get(0).event();
+            for (EventCandidate candidate : candidates) {
+                roll -= candidate.weight();
+                if (roll < 0) {
+                    event = candidate.event();
+                    break;
                 }
-            } else {
-                event = selectEvent();
             }
+            upcomingCandidates.remove(player.getUUID());
+            int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
+            badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
             String description = event.apply(player);
             if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
                 ServerPlayNetworking.send(player, new EventNotificationPayload(description));
@@ -406,6 +409,41 @@ public final class MinuteEventsMod implements ModInitializer {
         }
     }
 
+
+    private java.util.List<EventCandidate> candidatesFor(ServerPlayer player) {
+        return upcomingCandidates.computeIfAbsent(player.getUUID(), ignored -> {
+            boolean forceGood = badEventStreaks.getOrDefault(player.getUUID(), 0) >= 3;
+            java.util.EnumSet<MinuteEvent> chosen = java.util.EnumSet.noneOf(MinuteEvent.class);
+            int attempts = 0;
+            while (chosen.size() < 10 && attempts++ < 500) {
+                MinuteEvent candidate;
+                if (forceGood) {
+                    candidate = MinuteEvent.randomGoodEvent();
+                } else if (ThreadLocalRandom.current().nextInt(100) < 30) {
+                    if (player.serverLevel().dimension() == Level.NETHER) {
+                        candidate = randomNetherEvent(player);
+                    } else if (player.serverLevel().dimension() == Level.END) {
+                        candidate = randomEndEvent(player);
+                    } else {
+                        candidate = randomOverworldEvent(player);
+                    }
+                } else {
+                    candidate = selectEvent();
+                }
+                if (!forceGood || candidate.isGood()) chosen.add(candidate);
+            }
+            if (chosen.size() < 10) {
+                for (MinuteEvent candidate : MinuteEvent.values()) {
+                    if ((!forceGood || candidate.isGood()) && chosen.size() < 10) chosen.add(candidate);
+                }
+            }
+            java.util.ArrayList<EventCandidate> weighted = new java.util.ArrayList<>();
+            for (MinuteEvent candidate : chosen) {
+                weighted.add(new EventCandidate(candidate, ThreadLocalRandom.current().nextInt(1, 101)));
+            }
+            return java.util.List.copyOf(weighted);
+        });
+    }
 
     private MinuteEvent[] netherEventsFor(ServerPlayer player) {
         var biome = player.serverLevel().getBiome(player.blockPosition());
