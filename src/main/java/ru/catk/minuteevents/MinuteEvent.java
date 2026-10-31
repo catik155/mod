@@ -1946,7 +1946,7 @@ enum MinuteEvent {
 
         // Один игрок получает базовую орду, каждый следующий рядом добавляет 0,5x.
         double multiplier = 1.0 + Math.max(0L, nearbyPlayers - 1L) * 0.5;
-        int scaledAmount = Math.max(1, (int) Math.round(amount * multiplier));
+        int scaledAmount = Math.max(1, (int) Math.round(amount * multiplier * 0.6));
         return spawnGroup(player, types, scaledAmount, minDistance, maxDistance);
     }
 
