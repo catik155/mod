@@ -37,7 +37,7 @@ Fabric-мод для Minecraft Java Edition **1.21.1**. Добавляет бо�
 | `/minuteevent on` / `off` | Включить / выключить события |
 | `/minuteevent now` | Запустить событие немедленно |
 | `/minuteevent interval <секунды>` | Установить интервал от 10 до 3600 секунд |
-| `/minuteevent category <blocks\|cages\|walls\|mobs> on\|off` | Включить / выключить категорию |
+| `/minuteevent category <blocks\|cages\|traps\|walls\|mobs> on\|off` | Включить / выключить категорию |
 | `/minuteevent chance <категория> <0–100>` | Настроить шанс категории |
 | `/minuteevent chances` | Показать шансы событий |
 | `/minuteevent mode preview` | Показывать следующее событие |
