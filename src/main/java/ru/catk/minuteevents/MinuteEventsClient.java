@@ -14,7 +14,7 @@ import java.util.List;
 public final class MinuteEventsClient implements ClientModInitializer {
     private static final long DISPLAY_DURATION_NANOS = 7_000_000_000L;
     private static final int PANEL_WIDTH = 360;
-    private static final int DETAIL_WIDTH = 350;
+    private static final int DETAIL_WIDTH = 270;
 
     private static String currentMessage;
     private static long shownAtNanos;
@@ -104,17 +104,17 @@ public final class MinuteEventsClient implements ClientModInitializer {
 
             if (!detailText.isBlank()) {
                 List<FormattedCharSequence> detailLines = client.font.split(
-                    Component.literal(detailText), DETAIL_WIDTH - 24
+                    Component.literal(detailText), DETAIL_WIDTH - 18
                 );
-                int detailHeight = Math.max(24, detailLines.size() * 10 + 22);
+                int detailHeight = Math.max(24, detailLines.size() * 9 + 18);
                 int detailWidth = Math.min(DETAIL_WIDTH,
-                    Math.max(150, detailLines.stream().mapToInt(client.font::width).max().orElse(120) + 24));
+                    Math.max(130, detailLines.stream().mapToInt(client.font::width).max().orElse(110) + 18));
                 int top = timerVisible || !lastEvent.isBlank() ? 36 : 8;
                 graphics.fill(7, top, 7 + detailWidth, top + detailHeight, 0xE8101724);
                 graphics.fill(7, top, 7 + detailWidth, top + 2, 0xFF54D6A0);
-                graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 7, 0xFF70DDB5, false);
+                graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 5, 0xFF70DDB5, false);
                 for (int i = 0; i < detailLines.size(); i++) {
-                    graphics.drawString(client.font, detailLines.get(i), 15, top + 19 + i * 10, 0xFFF1F4F8, false);
+                    graphics.drawString(client.font, detailLines.get(i), 15, top + 15 + i * 9, 0xFFF1F4F8, false);
                 }
             }
         }
