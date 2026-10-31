@@ -2485,16 +2485,16 @@ enum MinuteEvent {
         int minZ = chunkZ << 4;
         int changed = 0;
 
-        // Transform every surface column in the selected 16x16 chunk.
+        // Transform the complete vertical volume of the selected 16x16 chunk.
+        // Air stays air; block entities are protected.
         for (int x = minX; x < minX + 16; x++) {
             for (int z = minZ; z < minZ + 16; z++) {
-                BlockPos ground = level.getHeightmapPos(
-                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    new BlockPos(x, center.getY(), z)
-                ).below();
-                BlockState old = level.getBlockState(ground);
-                if (old.isAir() || old.hasBlockEntity() || old.is(replacement.getBlock())) continue;
-                if (level.setBlock(ground, replacement, 3)) changed++;
+                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState old = level.getBlockState(pos);
+                    if (old.isAir() || old.hasBlockEntity() || old.is(replacement.getBlock())) continue;
+                    if (level.setBlock(pos, replacement, 3)) changed++;
+                }
             }
         }
         return changed;
@@ -2508,18 +2508,14 @@ enum MinuteEvent {
         int minZ = chunkZ << 4;
         int removed = 0;
 
-        // Apply the full requested depth to all 256 columns; no small block cap.
+        // Destructive chunk events traverse the full build height and never count air as a target.
         for (int x = minX; x < minX + 16; x++) {
             for (int z = minZ; z < minZ + 16; z++) {
-                BlockPos ground = level.getHeightmapPos(
-                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    new BlockPos(x, center.getY(), z)
-                ).below();
-                for (int dy = 0; dy < depth; dy++) {
-                    BlockPos target = ground.below(dy);
-                    BlockState state = level.getBlockState(target);
-                    if (state.isAir() || state.hasBlockEntity()) break;
-                    if (level.destroyBlock(target, false, player)) removed++;
+                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = level.getBlockState(pos);
+                    if (state.isAir() || state.hasBlockEntity()) continue;
+                    if (level.destroyBlock(pos, false, player)) removed++;
                 }
             }
         }
@@ -2532,23 +2528,20 @@ enum MinuteEvent {
         int chunkZ = center.getZ() >> 4;
         int minX = chunkX << 4;
         int minZ = chunkZ << 4;
-        int placed = 0;
+        int changed = 0;
 
-        // Flood the entire top layer of the selected chunk.
+        // Replace existing non-air blocks through the full chunk height; never place water into air.
         for (int x = minX; x < minX + 16; x++) {
             for (int z = minZ; z < minZ + 16; z++) {
-                BlockPos ground = level.getHeightmapPos(
-                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    new BlockPos(x, center.getY(), z)
-                ).below();
-                BlockPos waterPos = ground.above();
-                if (level.getBlockState(waterPos).isAir()
-                    && level.setBlock(waterPos, Blocks.WATER.defaultBlockState(), 3)) {
-                    placed++;
+                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState old = level.getBlockState(pos);
+                    if (old.isAir() || old.hasBlockEntity() || old.is(Blocks.WATER)) continue;
+                    if (level.setBlock(pos, Blocks.WATER.defaultBlockState(), 3)) changed++;
                 }
             }
         }
-        return placed;
+        return changed;
     }
 
     private static int buildIronCage(ServerLevel level, BlockPos base) {
