@@ -341,7 +341,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private int setCategoryChance(CommandSourceStack source, String categoryKey, int percent) {
         EventCategory category = EventCategory.fromConfigKey(categoryKey);
         if (category == null) {
-            source.sendFailure(Component.literal("Неизвестная категория. Используйте: blocks, cages, walls или mobs."));
+            source.sendFailure(Component.literal("Неизвестная категория. Используйте: blocks, cages, traps (или walls) или mobs."));
             return 0;
         }
 
@@ -613,13 +613,16 @@ public final class MinuteEventsMod implements ModInitializer {
             EnumMap<EventCategory, Integer> loadedCategoryChances = new EnumMap<>(EventCategory.class);
             int totalChance = 0;
             for (EventCategory category : EventCategory.configurableValues()) {
+                String configKey = category.configKey();
+                String legacyKey = category == EventCategory.TRAPS ? "walls" : configKey;
                 loadedCategoryEnabled.put(
                     category,
-                    parseBoolean(properties, category.configKey() + ".enabled", true)
+                    parseBoolean(properties, configKey + ".enabled",
+                        parseBoolean(properties, legacyKey + ".enabled", true))
                 );
                 int chance = Integer.parseInt(properties.getProperty(
-                    category.configKey() + ".chance",
-                    Integer.toString(category.defaultChance())
+                    configKey + ".chance",
+                    properties.getProperty(legacyKey + ".chance", Integer.toString(category.defaultChance()))
                 ));
                 if (category == EventCategory.MOBS && chance == 17) {
                     chance = category.defaultChance();
