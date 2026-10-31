@@ -414,7 +414,7 @@ public final class MinuteEventsMod implements ModInitializer {
             return new MinuteEvent[] {MinuteEvent.NETHER_SOUL_VALLEY_SKELETONS, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_SOULFIRE_BLESSING};
         }
         if (biome.is(Biomes.CRIMSON_FOREST)) {
-            return new MinuteEvent[] {MinuteEvent.NETHER_CRIMSON_ROOTS, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_SOULFIRE_BLESSING, MinuteEvent.NETHER_WITHER_SKELETON_PATROL};
+            return new MinuteEvent[] {MinuteEvent.NETHER_CRIMSON_ROOTS, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_PIGLIN_BRUTE_TRIBUTE, MinuteEvent.NETHER_SOULFIRE_BLESSING, MinuteEvent.NETHER_WITHER_SKELETON_PATROL};
         }
         if (biome.is(Biomes.WARPED_FOREST)) {
             return new MinuteEvent[] {MinuteEvent.NETHER_WARPED_ENDERMEN, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_STRIDER_RIDE, MinuteEvent.NETHER_GHAST_SHADOW, MinuteEvent.NETHER_WITHER_SKELETON_PATROL};
