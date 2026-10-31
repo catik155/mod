@@ -1888,6 +1888,78 @@ enum MinuteEvent {
         }
     },
 
+
+    CHUNK_QUAKE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = removeChunkSurface(player, center, 3, 1, 34);
+            return "ЧАНКОВОЕ ЗЕМЛЕТРЯСЕНИЕ! В выбранном чанке обрушилось " + changed + " блоков поверхности.";
+        }
+    },
+    CHUNK_FLASH_FLOOD(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = floodChunkPatch(player, center, 3);
+            return "ПРОРЫВ ВОДЫ! Часть чанка затоплена. Размещено водяных блоков: " + changed + ".";
+        }
+    },
+    CHUNK_MAGMA_FAULT(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 2, Blocks.MAGMA_BLOCK.defaultBlockState(), 0);
+            return "МАГМАТИЧЕСКИЙ РАЗЛОМ! Поверхность чанка покрылась магмой: " + changed + " блоков.";
+        }
+    },
+    CHUNK_GLASSIFICATION(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.GLASS.defaultBlockState(), 1);
+            return "СТЕКЛЯНИЕ ЧАНКА! Земля на участке превратилась в стекло: " + changed + " блоков.";
+        }
+    },
+    CHUNK_GRAVEL_COLLAPSE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.GRAVEL.defaultBlockState(), 0);
+            return "ГРАВИЙНЫЙ ОБВАЛ! Поверхность чанка осыпалась и стала гравием: " + changed + " блоков.";
+        }
+    },
+    CHUNK_OBSIDIAN_SEAL(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 2, Blocks.OBSIDIAN.defaultBlockState(), 0);
+            return "ОБСИДИАНОВАЯ ПЕЧАТЬ! Участок чанка запечатан обсидианом: " + changed + " блоков.";
+        }
+    },
+    CHUNK_ICE_AGE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.ICE.defaultBlockState(), 1);
+            return "ЛОКАЛЬНЫЙ ЛЕДНИК! Поверхность чанка промёрзла: " + changed + " блоков заменено льдом.";
+        }
+    },
+    CHUNK_SCULK_INFECTION(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.SCULK.defaultBlockState(), 0);
+            return "СКАЛКОВАЯ ИНФЕКЦИЯ! Заражение поглотило поверхность чанка: " + changed + " блоков.";
+        }
+    },
+    CHUNK_VOID_BITE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = removeChunkSurface(player, center, 2, 2, 48);
+            return "УКУС ПУСТОТЫ! Кусок поверхности и породы исчез из чанка. Удалено блоков: " + changed + ".";
+        }
+    },
+    CHUNK_DEEPSLATE_RUIN(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.COBBLED_DEEPSLATE.defaultBlockState(), 2);
+            return "ДРЕВНЕЕ ИСКАЖЕНИЕ! Поверхность чанка стала древним сланцем: " + changed + " блоков.";
+        }
+    },
+
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
         String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
@@ -2162,6 +2234,95 @@ enum MinuteEvent {
             && !state.is(Blocks.COMMAND_BLOCK)
             && !state.is(Blocks.REPEATING_COMMAND_BLOCK)
             && !state.is(Blocks.CHAIN_COMMAND_BLOCK);
+    }
+
+
+    private static BlockPos randomChunkSurfacePosition(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        int playerChunkX = player.blockPosition().getX() >> 4;
+        int playerChunkZ = player.blockPosition().getZ() >> 4;
+        int chunkX = playerChunkX + ThreadLocalRandom.current().nextInt(-1, 2);
+        int chunkZ = playerChunkZ + ThreadLocalRandom.current().nextInt(-1, 2);
+        int x = (chunkX << 4) + ThreadLocalRandom.current().nextInt(3, 13);
+        int z = (chunkZ << 4) + ThreadLocalRandom.current().nextInt(3, 13);
+        BlockPos surface = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, player.getBlockY(), z));
+        if (surface.closerToCenterThan(player.position(), 7.0)) {
+            x = (chunkX << 4) + (x - (chunkX << 4) < 8 ? 12 : 3);
+            z = (chunkZ << 4) + (z - (chunkZ << 4) < 8 ? 12 : 3);
+            surface = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, player.getBlockY(), z));
+        }
+        return surface;
+    }
+
+    private static boolean isNaturalChunkTerrain(BlockState state) {
+        if (state.isAir() || state.hasBlockEntity()) return false;
+        return state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.DIRT) || state.is(Blocks.COARSE_DIRT)
+            || state.is(Blocks.PODZOL) || state.is(Blocks.MYCELIUM) || state.is(Blocks.STONE)
+            || state.is(Blocks.DEEPSLATE) || state.is(Blocks.COBBLED_DEEPSLATE)
+            || state.is(Blocks.GRAVEL) || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND)
+            || state.is(Blocks.SANDSTONE) || state.is(Blocks.RED_SANDSTONE) || state.is(Blocks.NETHERRACK)
+            || state.is(Blocks.END_STONE) || state.is(Blocks.TUFF) || state.is(Blocks.CALCITE)
+            || state.is(Blocks.MOSS_BLOCK) || state.is(Blocks.SNOW_BLOCK);
+    }
+
+    private static int replaceChunkSurface(ServerPlayer player, BlockPos center, int radius, BlockState replacement, int pattern) {
+        ServerLevel level = player.serverLevel();
+        int chunkX = center.getX() >> 4;
+        int chunkZ = center.getZ() >> 4;
+        int changed = 0;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                if (pattern == 1 && ThreadLocalRandom.current().nextInt(100) < 25) continue;
+                if (pattern == 2 && ((dx + dz) & 1) != 0) continue;
+                int x = center.getX() + dx;
+                int z = center.getZ() + dz;
+                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
+                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
+                BlockState old = level.getBlockState(ground);
+                if (!isNaturalChunkTerrain(old) || old.is(replacement.getBlock())) continue;
+                if (level.setBlock(ground, replacement, 3)) changed++;
+            }
+        }
+        return changed;
+    }
+
+    private static int removeChunkSurface(ServerPlayer player, BlockPos center, int radius, int depth, int limit) {
+        ServerLevel level = player.serverLevel();
+        int chunkX = center.getX() >> 4;
+        int chunkZ = center.getZ() >> 4;
+        int removed = 0;
+        for (int dx = -radius; dx <= radius && removed < limit; dx++) {
+            for (int dz = -radius; dz <= radius && removed < limit; dz++) {
+                int x = center.getX() + dx;
+                int z = center.getZ() + dz;
+                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
+                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
+                for (int dy = 0; dy < depth && removed < limit; dy++) {
+                    BlockPos target = ground.below(dy);
+                    if (!isNaturalChunkTerrain(level.getBlockState(target))) break;
+                    if (level.destroyBlock(target, false, player)) removed++;
+                }
+            }
+        }
+        return removed;
+    }
+
+    private static int floodChunkPatch(ServerPlayer player, BlockPos center, int radius) {
+        ServerLevel level = player.serverLevel();
+        int chunkX = center.getX() >> 4;
+        int chunkZ = center.getZ() >> 4;
+        int placed = 0;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                int x = center.getX() + dx;
+                int z = center.getZ() + dz;
+                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
+                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
+                BlockPos waterPos = ground.above();
+                if (level.getBlockState(waterPos).isAir() && level.setBlock(waterPos, Blocks.WATER.defaultBlockState(), 3)) placed++;
+            }
+        }
+        return placed;
     }
 
     private static int buildIronCage(ServerLevel level, BlockPos base) {
