@@ -44,7 +44,11 @@ public final class MinuteEventsClient implements ClientModInitializer {
                 promptedForLan = false;
                 return;
             }
-            if (server.isPublished() && !promptedForLan && client.player != null) {
+            if (!server.isPublished()) {
+                promptedForLan = false;
+                return;
+            }
+            if (!promptedForLan && client.player != null) {
                 promptedForLan = true;
                 client.setScreen(new MultiplayerModeScreen(client.screen));
             }
