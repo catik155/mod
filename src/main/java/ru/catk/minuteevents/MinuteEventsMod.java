@@ -427,9 +427,13 @@ public final class MinuteEventsMod implements ModInitializer {
     private java.util.List<EventCandidate> candidatesFor(ServerPlayer player) {
         return upcomingCandidates.computeIfAbsent(player.getUUID(), ignored -> {
             boolean forceGood = badEventStreaks.getOrDefault(player.getUUID(), 0) >= 3;
+            boolean inNether = player.serverLevel().dimension() == Level.NETHER;
+            boolean inEnd = player.serverLevel().dimension() == Level.END;
+            MinuteEvent[] dimensionPool = inNether ? netherEventsFor(player) : inEnd ? endEventsFor(player) : MinuteEvent.values();
+            int targetCount = Math.min(10, dimensionPool.length);
             java.util.EnumSet<MinuteEvent> chosen = java.util.EnumSet.noneOf(MinuteEvent.class);
             int attempts = 0;
-            while (chosen.size() < 10 && attempts++ < 500) {
+            while (chosen.size() < targetCount && attempts++ < 500) {
                 MinuteEvent candidate;
                 if (player.serverLevel().dimension() == Level.NETHER) {
                     candidate = randomNetherEvent(player);
@@ -446,9 +450,9 @@ public final class MinuteEventsMod implements ModInitializer {
                 }
                 if (!forceGood || candidate.isGood()) chosen.add(candidate);
             }
-            if (chosen.size() < 10) {
-                for (MinuteEvent candidate : MinuteEvent.values()) {
-                    if ((!forceGood || candidate.isGood()) && chosen.size() < 10) chosen.add(candidate);
+            if (chosen.size() < targetCount) {
+                for (MinuteEvent candidate : dimensionPool) {
+                    if ((!forceGood || candidate.isGood()) && chosen.size() < targetCount) chosen.add(candidate);
                 }
             }
             java.util.ArrayList<EventCandidate> weighted = new java.util.ArrayList<>();
@@ -614,6 +618,9 @@ public final class MinuteEventsMod implements ModInitializer {
                     category.configKey() + ".chance",
                     Integer.toString(category.defaultChance())
                 ));
+                if (category == EventCategory.MOBS && chance == 17) {
+                    chance = category.defaultChance();
+                }
                 if (chance < 0 || chance > 100) {
                     throw new IllegalArgumentException(
                         "Вероятность категории " + category.configKey() + " вне диапазона 0–100."
