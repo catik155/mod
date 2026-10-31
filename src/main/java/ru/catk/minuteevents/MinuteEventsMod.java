@@ -12,6 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -378,7 +379,14 @@ public final class MinuteEventsMod implements ModInitializer {
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
-            MinuteEvent event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
+            MinuteEvent event;
+            if (player.serverLevel().dimension() == Level.NETHER) {
+                event = badStreak >= 3 ? randomNetherGoodEvent() : randomNetherEvent();
+            } else if (player.serverLevel().dimension() == Level.END) {
+                event = badStreak >= 3 ? randomEndGoodEvent() : randomEndEvent();
+            } else {
+                event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
+            }
             String description = event.apply(player);
             if (event.isGood()) {
                 badEventStreaks.put(player.getUUID(), 0);
@@ -394,6 +402,26 @@ public final class MinuteEventsMod implements ModInitializer {
                 );
             }
         }
+    }
+
+    private MinuteEvent randomNetherEvent() {
+        MinuteEvent[] events = {MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT};
+        return events[ThreadLocalRandom.current().nextInt(events.length)];
+    }
+
+    private MinuteEvent randomNetherGoodEvent() {
+        MinuteEvent[] events = {MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT};
+        return events[ThreadLocalRandom.current().nextInt(events.length)];
+    }
+
+    private MinuteEvent randomEndEvent() {
+        MinuteEvent[] events = {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_SHULKER_SURPRISE, MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL};
+        return events[ThreadLocalRandom.current().nextInt(events.length)];
+    }
+
+    private MinuteEvent randomEndGoodEvent() {
+        MinuteEvent[] events = {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL};
+        return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
     private MinuteEvent selectEvent() {
