@@ -205,7 +205,7 @@ public final class MinuteEventsMod implements ModInitializer {
             int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
             StringBuilder display = new StringBuilder("10 возможных событий:");
             for (EventCandidate candidate : candidates) {
-                display.append("\\n")
+                display.append("\n")
                     .append(candidate.event().displayName())
                     .append(" — ")
                     .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
@@ -271,8 +271,8 @@ public final class MinuteEventsMod implements ModInitializer {
         source.sendSuccess(() -> Component.literal("§e/minuteevent help §7— список команд"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent status §7— статус и настройки"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent chances §7— точные шансы 10 событий для вас"), false);
-        source.sendSuccess(() -> Component.literal("§e/minuteevent mode preview §7— список событий и их шансы в HUD"), false);
-        source.sendSuccess(() -> Component.literal("§e/minuteevent mode chance §7— показывает конкретное следующее событие в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode preview §7— показывает следующее событие в HUD"), false);
+        source.sendSuccess(() -> Component.literal("§e/minuteevent mode chance §7— показывает шансы событий в HUD"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent mode blind §7— скрыть информацию о событии"), false);
         source.sendSuccess(() -> Component.literal("§e/minuteevent timer on|off §7— показать/скрыть таймер HUD"), false);
         if (source.hasPermission(2)) {
@@ -280,7 +280,7 @@ public final class MinuteEventsMod implements ModInitializer {
             source.sendSuccess(() -> Component.literal("§e/minuteevent on|off §7— включить/выключить события"), false);
             source.sendSuccess(() -> Component.literal("§e/minuteevent now §7— запустить событие сейчас"), false);
             source.sendSuccess(() -> Component.literal("§e/minuteevent interval <секунды> §7— интервал 10–3600 секунд"), false);
-            source.sendSuccess(() -> Component.literal("§e/minuteevent category <blocks|cages|walls|mobs> <on|off> §7— категория"), false);
+            source.sendSuccess(() -> Component.literal("§e/minuteevent category <blocks|cages|traps|mobs> <on|off> §7— категория"), false);
             source.sendSuccess(() -> Component.literal("§e/minuteevent chance <категория> <0–100> §7— шанс категории"), false);
         }
         return 1;
@@ -324,7 +324,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private int setCategoryEnabled(CommandSourceStack source, String categoryKey, boolean value) {
         EventCategory category = EventCategory.fromConfigKey(categoryKey);
         if (category == null) {
-            source.sendFailure(Component.literal("Неизвестная категория. Используйте: blocks, cages, walls или mobs."));
+            source.sendFailure(Component.literal("Неизвестная категория. Используйте: blocks, cages, traps (или walls) или mobs."));
             return 0;
         }
 
