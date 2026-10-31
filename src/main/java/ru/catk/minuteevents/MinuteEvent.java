@@ -2002,7 +2002,7 @@ enum MinuteEvent {
             case STONE_BARRICADE -> "Каменная пробка";
             case HOSTILE_VISITOR -> "Нежданные гости";
             case FRIENDLY_VISITOR -> "Милый незваный гость";
-            case SMALL_GIFT -> "Подарочек от судьбы";
+            case SMALL_GIFT -> "Подарки от Майнкрафта";
             case QUICK_FEET -> "Ноги на турбо";
             case SECOND_WIND -> "Второе дыхание";
             case STAR_BURST -> "Звёздный конфетти";
