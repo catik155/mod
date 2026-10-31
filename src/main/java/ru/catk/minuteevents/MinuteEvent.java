@@ -1940,12 +1940,14 @@ enum MinuteEvent {
         int minDistance,
         int maxDistance
     ) {
-        boolean anotherPlayerNearby = player.serverLevel().players().stream()
-            .anyMatch(other -> other != player && other.distanceToSqr(player) <= 32.0 * 32.0);
-        if (!anotherPlayerNearby) {
-            return 0;
-        }
-        return spawnGroup(player, types, amount, minDistance, maxDistance);
+        long nearbyPlayers = player.serverLevel().players().stream()
+            .filter(other -> other.distanceToSqr(player) <= 32.0 * 32.0)
+            .count();
+
+        // Один игрок получает базовую орду, каждый следующий рядом добавляет 0,5x.
+        double multiplier = 1.0 + Math.max(0L, nearbyPlayers - 1L) * 0.5;
+        int scaledAmount = Math.max(1, (int) Math.round(amount * multiplier));
+        return spawnGroup(player, types, scaledAmount, minDistance, maxDistance);
     }
 
     private static int spawnGroup(
