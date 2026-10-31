@@ -13,6 +13,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -385,7 +388,7 @@ public final class MinuteEventsMod implements ModInitializer {
             } else if (player.serverLevel().dimension() == Level.END) {
                 event = badStreak >= 3 ? randomEndGoodEvent() : randomEndEvent();
             } else {
-                event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : selectEvent();
+                event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : randomOverworldEvent(player);
             }
             String description = event.apply(player);
             if (event.isGood()) {
@@ -404,8 +407,79 @@ public final class MinuteEventsMod implements ModInitializer {
         }
     }
 
+
+    private MinuteEvent[] netherEventsFor(ServerPlayer player) {
+        var biome = player.serverLevel().getBiome(player.blockPosition());
+        if (biome.is(Biomes.SOUL_SAND_VALLEY)) {
+            return new MinuteEvent[] {MinuteEvent.NETHER_SOUL_VALLEY_SKELETONS, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT};
+        }
+        if (biome.is(Biomes.CRIMSON_FOREST)) {
+            return new MinuteEvent[] {MinuteEvent.NETHER_CRIMSON_ROOTS, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_GOLD_GIFT};
+        }
+        if (biome.is(Biomes.WARPED_FOREST)) {
+            return new MinuteEvent[] {MinuteEvent.NETHER_WARPED_ENDERMEN, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_STRIDER_RIDE};
+        }
+        if (biome.is(Biomes.BASALT_DELTAS)) {
+            return new MinuteEvent[] {MinuteEvent.NETHER_BASALT_MAGMA, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE};
+        }
+        return new MinuteEvent[] {MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_STRIDER_RIDE};
+    }
+
+    private MinuteEvent[] endEventsFor(ServerPlayer player) {
+        var biome = player.serverLevel().getBiome(player.blockPosition());
+        if (biome.is(Biomes.END_HIGHLANDS)) {
+            return new MinuteEvent[] {MinuteEvent.END_HIGH_ISLAND_SHULKER, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_ENDERMITE_AMBUSH};
+        }
+        if (biome.is(Biomes.END_MIDLANDS)) {
+            return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_CHORUS_BLOOM, MinuteEvent.END_ENDERMITE_AMBUSH, MinuteEvent.END_SLOW_FALL};
+        }
+        if (biome.is(Biomes.SMALL_END_ISLANDS) || biome.is(Biomes.END_BARRENS)) {
+            return new MinuteEvent[] {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.ENDERMAN_VISIT};
+        }
+        return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_SHULKER_SURPRISE, MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT};
+    }
+
+    private boolean hasNearbyBlock(ServerPlayer player, net.minecraft.world.level.block.Block block) {
+        BlockPos center = player.blockPosition();
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-4, -2, -4), center.offset(4, 2, 4))) {
+            if (player.serverLevel().getBlockState(pos).is(block)) return true;
+        }
+        return false;
+    }
+
+    private MinuteEvent randomOverworldEvent(ServerPlayer player) {
+        var biome = player.serverLevel().getBiome(player.blockPosition());
+        MinuteEvent[] events;
+        if (biome.is(Biomes.DESERT)) {
+            events = new MinuteEvent[] {MinuteEvent.DESERT_HUSK_PATROL, MinuteEvent.BADLANDS_GOLD_GIFT, MinuteEvent.QUICK_FEET};
+        } else if (biome.is(Biomes.BADLANDS) || biome.is(Biomes.ERODED_BADLANDS) || biome.is(Biomes.WOODED_BADLANDS)) {
+            events = new MinuteEvent[] {MinuteEvent.BADLANDS_GOLD_GIFT, MinuteEvent.DESERT_HUSK_PATROL, MinuteEvent.SECOND_WIND};
+        } else if (biome.is(Biomes.JUNGLE) || biome.is(Biomes.BAMBOO_JUNGLE) || biome.is(Biomes.SPARSE_JUNGLE)) {
+            events = new MinuteEvent[] {MinuteEvent.JUNGLE_PARROT_VISIT, MinuteEvent.JUNGLE_OCELOT_VISIT, MinuteEvent.FRIENDLY_VISITOR};
+        } else if (biome.is(Biomes.SWAMP) || biome.is(Biomes.MANGROVE_SWAMP)) {
+            events = new MinuteEvent[] {MinuteEvent.SWAMP_SLIME_VISIT, MinuteEvent.SECOND_WIND, MinuteEvent.WATER_NEARBY_BREATHING};
+        } else if (biome.is(Biomes.SNOWY_PLAINS) || biome.is(Biomes.SNOWY_TAIGA) || biome.is(Biomes.ICE_SPIKES)) {
+            events = new MinuteEvent[] {MinuteEvent.SNOWY_STRAY_PATROL, MinuteEvent.QUICK_FEET, MinuteEvent.SECOND_WIND};
+        } else if (biome.is(Biomes.FROZEN_PEAKS) || biome.is(Biomes.JAGGED_PEAKS) || biome.is(Biomes.STONY_PEAKS)) {
+            events = new MinuteEvent[] {MinuteEvent.MOUNTAIN_GOAT_VISIT, MinuteEvent.SNOWY_STRAY_PATROL, MinuteEvent.SECOND_WIND};
+        } else if (biome.is(Biomes.OCEAN) || biome.is(Biomes.DEEP_OCEAN) || biome.is(Biomes.COLD_OCEAN) || biome.is(Biomes.WARM_OCEAN) || biome.is(Biomes.LUKEWARM_OCEAN) || biome.is(Biomes.FROZEN_OCEAN)) {
+            events = new MinuteEvent[] {MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.END_PEARL_GIFT};
+        } else if (biome.is(Biomes.MUSHROOM_FIELDS)) {
+            events = new MinuteEvent[] {MinuteEvent.MUSHROOM_COW_VISIT, MinuteEvent.SECOND_WIND, MinuteEvent.FOOD_GIFT};
+        } else if (biome.is(Biomes.CHERRY_GROVE)) {
+            events = new MinuteEvent[] {MinuteEvent.CHERRY_BLOSSOM_GIFT, MinuteEvent.MOUNTAIN_GOAT_VISIT, MinuteEvent.FRIENDLY_VISITOR};
+        } else {
+            if (hasNearbyBlock(player, Blocks.LAVA)) events = new MinuteEvent[] {MinuteEvent.LAVA_NEARBY_FIRE_RESISTANCE, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.SECOND_WIND};
+            else if (hasNearbyBlock(player, Blocks.WATER)) events = new MinuteEvent[] {MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.SECOND_WIND};
+            else events = new MinuteEvent[] {MinuteEvent.ANIMAL_HERD, MinuteEvent.FRIENDLY_VISITOR, MinuteEvent.QUICK_FEET, MinuteEvent.SECOND_WIND, MinuteEvent.JUNGLE_PARROT_VISIT};
+        }
+        if (hasNearbyBlock(player, Blocks.LAVA)) return new MinuteEvent[] {MinuteEvent.LAVA_NEARBY_FIRE_RESISTANCE, events[ThreadLocalRandom.current().nextInt(events.length)]};
+        if (hasNearbyBlock(player, Blocks.WATER)) return new MinuteEvent[] {MinuteEvent.WATER_NEARBY_BREATHING, events[ThreadLocalRandom.current().nextInt(events.length)]};
+        return events;
+    }
+
     private MinuteEvent randomNetherEvent() {
-        MinuteEvent[] events = {MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT};
+        MinuteEvent[] events = netherEventsFor(player);
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
@@ -415,12 +489,12 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private MinuteEvent randomEndEvent() {
-        MinuteEvent[] events = {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_SHULKER_SURPRISE, MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL};
+        MinuteEvent[] events = endEventsFor(player);
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
     private MinuteEvent randomEndGoodEvent() {
-        MinuteEvent[] events = {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL};
+        MinuteEvent[] events = {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_CHORUS_BLOOM};
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
