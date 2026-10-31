@@ -51,6 +51,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private final Map<UUID, java.util.List<EventCandidate>> upcomingCandidates = new HashMap<>();
     private final Map<UUID, MinuteEvent> upcomingSelected = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
+    private final Map<UUID, MinuteEvent> lastTriggeredEvents = new HashMap<>();
 
     private record EventCandidate(MinuteEvent event, int weight) {
         double percent(int totalWeight) {
@@ -209,6 +210,8 @@ public final class MinuteEventsMod implements ModInitializer {
                     .append(" — ")
                     .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
             }
+            MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
+            if (previous != null) display.append("\\nПоследнее событие: ").append(previous.displayName());
             return display.toString();
         }
         MinuteEvent selected = upcomingSelected.get(player.getUUID());
@@ -216,7 +219,9 @@ public final class MinuteEventsMod implements ModInitializer {
             candidatesFor(player);
             selected = upcomingSelected.get(player.getUUID());
         }
-        return selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName();
+        MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
+        String last = previous == null ? "Последнее событие: ещё не было" : "Последнее событие: " + previous.displayName();
+        return last + "\\n" + (selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName());
     }
 
     private double eventChance(MinuteEvent event, int badStreak) {
@@ -399,6 +404,7 @@ public final class MinuteEventsMod implements ModInitializer {
             upcomingSelected.remove(player.getUUID());
             int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
             badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
+            lastTriggeredEvents.put(player.getUUID(), event);
             String description = event.apply(player);
             if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
                 ServerPlayNetworking.send(player, new EventNotificationPayload(description));
