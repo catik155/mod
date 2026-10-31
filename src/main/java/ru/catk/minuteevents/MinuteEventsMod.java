@@ -212,16 +212,16 @@ public final class MinuteEventsMod implements ModInitializer {
                 candidatesFor(player);
                 selected = upcomingSelected.get(player.getUUID());
             }
-            return last + "\\n" + (selected == null
+            return last + "\n" + (selected == null
                 ? "Следующее событие определяется..."
                 : "Следующее событие: " + selected.displayName());
         }
 
         java.util.List<EventCandidate> candidates = candidatesFor(player);
         int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
-        StringBuilder display = new StringBuilder(last).append("\\nШансы следующих событий:");
+        StringBuilder display = new StringBuilder(last).append("\nШансы следующих событий:");
         for (EventCandidate candidate : candidates) {
-            display.append("\\n")
+            display.append("\n")
                 .append(candidate.event().displayName())
                 .append(" — ")
                 .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
