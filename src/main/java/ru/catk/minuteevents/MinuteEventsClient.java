@@ -43,10 +43,14 @@ public final class MinuteEventsClient implements ClientModInitializer {
                 promptedForLan = false;
                 return;
             }
-            boolean isHost = client.getSingleplayerServer() != null || client.player.hasPermissions(2);
-            if (isHost && !promptedForLan) {
+            var server = client.getSingleplayerServer();
+            if (server == null || !server.isPublished()) {
+                promptedForLan = false;
+                return;
+            }
+            if (!promptedForLan) {
                 promptedForLan = true;
-                client.setScreen(new GameplaySettingsScreen());
+                client.setScreen(new MultiplayerModeScreen(client.screen));
             }
         });
     }
