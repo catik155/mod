@@ -57,15 +57,47 @@ public final class MinuteEventsClient implements ClientModInitializer {
             graphics.drawString(client.font, timerText, 15, 20, 0xFFFFD27A, false);
         }
         if (!timerDetail.isBlank()) {
-            List<FormattedCharSequence> detailLines = client.font.split(Component.literal(timerDetail), DETAIL_WIDTH - 24);
-            int detailHeight = Math.max(24, detailLines.size() * 10 + 22);
-            int detailWidth = Math.min(DETAIL_WIDTH, Math.max(150, detailLines.stream().mapToInt(client.font::width).max().orElse(120) + 24));
-            int top = timerVisible ? 36 : 8;
-            graphics.fill(7, top, 7 + detailWidth, top + detailHeight, 0xE8101724);
-            graphics.fill(7, top, 7 + detailWidth, top + 2, 0xFF54D6A0);
-            graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 7, 0xFF70DDB5, false);
-            for (int i = 0; i < detailLines.size(); i++) {
-                graphics.drawString(client.font, detailLines.get(i), 15, top + 19 + i * 10, 0xFFF1F4F8, false);
+            String[] detailParts = timerDetail.split("\\n", 2);
+            String lastEvent = detailParts.length > 1 && detailParts[0].startsWith("Последнее событие:")
+                ? detailParts[0]
+                : "";
+            String detailText = lastEvent.isEmpty() ? timerDetail : detailParts[1];
+
+            int screenWidth = client.getWindow().getGuiScaledWidth();
+            int timerWidth = timerVisible
+                ? Math.max(112, client.font.width("00:00") + 48)
+                : 0;
+
+            if (timerVisible && !lastEvent.isBlank()) {
+                int panelX = 7 + timerWidth + 8;
+                int availableWidth = Math.max(90, screenWidth - panelX - 7);
+                List<FormattedCharSequence> lastLines = client.font.split(
+                    Component.literal(lastEvent), Math.max(70, availableWidth - 20)
+                );
+                int panelWidth = Math.min(availableWidth,
+                    Math.max(130, lastLines.stream().mapToInt(client.font::width).max().orElse(100) + 20));
+                int panelHeight = Math.max(24, lastLines.size() * 10 + 14);
+                graphics.fill(panelX, 7, panelX + panelWidth, 7 + panelHeight, 0xE8101724);
+                graphics.fill(panelX, 7, panelX + 2, 7 + panelHeight, 0xFF54D6A0);
+                for (int i = 0; i < lastLines.size(); i++) {
+                    graphics.drawString(client.font, lastLines.get(i), panelX + 10, 14 + i * 10, 0xFFF1F4F8, false);
+                }
+            }
+
+            if (!detailText.isBlank()) {
+                List<FormattedCharSequence> detailLines = client.font.split(
+                    Component.literal(detailText), DETAIL_WIDTH - 24
+                );
+                int detailHeight = Math.max(24, detailLines.size() * 10 + 22);
+                int detailWidth = Math.min(DETAIL_WIDTH,
+                    Math.max(150, detailLines.stream().mapToInt(client.font::width).max().orElse(120) + 24));
+                int top = timerVisible ? 36 : 8;
+                graphics.fill(7, top, 7 + detailWidth, top + detailHeight, 0xE8101724);
+                graphics.fill(7, top, 7 + detailWidth, top + 2, 0xFF54D6A0);
+                graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 7, 0xFF70DDB5, false);
+                for (int i = 0; i < detailLines.size(); i++) {
+                    graphics.drawString(client.font, detailLines.get(i), 15, top + 19 + i * 10, 0xFFF1F4F8, false);
+                }
             }
         }
         if (currentMessage == null) {
