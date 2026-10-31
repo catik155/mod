@@ -483,9 +483,9 @@ public final class MinuteEventsMod implements ModInitializer {
             else if (hasNearbyBlock(player, Blocks.WATER)) events = new MinuteEvent[] {MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.SECOND_WIND};
             else events = new MinuteEvent[] {MinuteEvent.ANIMAL_HERD, MinuteEvent.FRIENDLY_VISITOR, MinuteEvent.QUICK_FEET, MinuteEvent.SECOND_WIND, MinuteEvent.JUNGLE_PARROT_VISIT};
         }
-        if (hasNearbyBlock(player, Blocks.LAVA)) return new MinuteEvent[] {MinuteEvent.LAVA_NEARBY_FIRE_RESISTANCE, events[ThreadLocalRandom.current().nextInt(events.length)]};
-        if (hasNearbyBlock(player, Blocks.WATER)) return new MinuteEvent[] {MinuteEvent.WATER_NEARBY_BREATHING, events[ThreadLocalRandom.current().nextInt(events.length)]};
-        return events;
+        if (hasNearbyBlock(player, Blocks.LAVA) && ThreadLocalRandom.current().nextBoolean()) return MinuteEvent.LAVA_NEARBY_FIRE_RESISTANCE;
+        if (hasNearbyBlock(player, Blocks.WATER) && ThreadLocalRandom.current().nextBoolean()) return MinuteEvent.WATER_NEARBY_BREATHING;
+        return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
     private MinuteEvent randomNetherEvent(ServerPlayer player) {
