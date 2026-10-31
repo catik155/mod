@@ -572,19 +572,19 @@ enum MinuteEvent {
     METEOR_CRATER(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            var pos = randomSurfacePosition(player, 7, 12).below(); int n = createCrater(player, pos, 3); return "Метеоритный удар! Разрушено блоков: " + n;
+            var pos = randomSurfacePosition(player, 7, 12).below(); int n = createCrater(player, pos, 3); return "Метеоритный удар! Земля разлетелась от мощного столкновения.";
         }
     },
     GROUND_COLLAPSE(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            int n = removeBlockBurst(player, 2, 5, 20, 30); return "Земля провалилась под ногами! Блоков исчезло: " + n;
+            int n = removeBlockBurst(player, 2, 5, 20, 30); return "Земля провалилась под ногами! Образовалась глубокая воронка.";
         }
     },
     REMOTE_EXPLOSION(EventCategory.OTHER) {
         @Override
         String apply(ServerPlayer player) {
-            var pos = randomSurfacePosition(player, 8, 14).below(); int n = createCrater(player, pos, 2); return "Вдалеке прогремел взрыв! Уничтожено блоков: " + n;
+            var pos = randomSurfacePosition(player, 8, 14).below(); int n = createCrater(player, pos, 2); return "Вдалеке прогремел мощный взрыв!";
         }
     },
     SPEED_CURSE(EventCategory.OTHER) {
@@ -937,7 +937,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_001(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 33); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 33); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_002(EventCategory.MOBS) {
         @Override
@@ -957,7 +957,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_006(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 44); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 44); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_007(EventCategory.MOBS) {
         @Override
@@ -977,7 +977,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_011(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 55); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 55); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_012(EventCategory.MOBS) {
         @Override
@@ -997,7 +997,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_016(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 40); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 40); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_017(EventCategory.MOBS) {
         @Override
@@ -1017,7 +1017,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_021(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 51); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 51); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_022(EventCategory.MOBS) {
         @Override
@@ -1037,7 +1037,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_026(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 35); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 35); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_027(EventCategory.MOBS) {
         @Override
@@ -1057,7 +1057,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_031(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 46); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 46); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_032(EventCategory.MOBS) {
         @Override
@@ -1077,7 +1077,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_036(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 34); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 34); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_037(EventCategory.MOBS) {
         @Override
@@ -1097,7 +1097,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_041(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 42); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 42); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_042(EventCategory.MOBS) {
         @Override
@@ -1117,7 +1117,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_046(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 53); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 53); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_047(EventCategory.MOBS) {
         @Override
@@ -1137,7 +1137,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_051(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 37); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 37); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_052(EventCategory.MOBS) {
         @Override
@@ -1157,7 +1157,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_056(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 48); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 48); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_057(EventCategory.MOBS) {
         @Override
@@ -1177,7 +1177,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_061(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 37); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 29, 37); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_062(EventCategory.MOBS) {
         @Override
@@ -1197,7 +1197,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_066(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 44); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 22, 44); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_067(EventCategory.MOBS) {
         @Override
@@ -1217,7 +1217,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_071(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 55); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 33, 55); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_072(EventCategory.MOBS) {
         @Override
@@ -1237,7 +1237,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_076(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 40); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 26, 40); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_077(EventCategory.MOBS) {
         @Override
@@ -1257,7 +1257,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_081(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 51); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 20, 51); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_082(EventCategory.MOBS) {
         @Override
@@ -1277,7 +1277,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_086(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 39); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 31, 39); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_087(EventCategory.MOBS) {
         @Override
@@ -1297,7 +1297,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_091(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 46); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 5, 10, 24, 46); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_092(EventCategory.MOBS) {
         @Override
@@ -1317,7 +1317,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_096(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 31); return removed > 0 ? "ударная волна уничтожила блоков: " + removed + "!" : "ударная волна прошла без разрушений."; }
+        String apply(ServerPlayer player) { int removed = removeBlockBurst(player, 4, 10, 18, 31); return removed > 0 ? "Мощная ударная волна обрушилась на местность!" : "Ударная волна прошла без разрушений."; }
     },
     EXTRA_CATASTROPHE_097(EventCategory.MOBS) {
         @Override
@@ -1337,7 +1337,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_101(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 4, 9).below(), 4); return "Мега-взрыв! Разрушено блоков: " + n; }
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 4, 9).below(), 4); return "Мега-взрыв! Землю разорвало мощнейшим взрывом."; }
     },
     EXTRA_CATASTROPHE_102(EventCategory.MOBS) {
         @Override
@@ -1357,7 +1357,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_106(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 4, 12, 35, 55); return "Разлом земли! Исчезло блоков: " + n; }
+        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 4, 12, 35, 55); return "Разлом земли! Огромная трещина расколола поверхность."; }
     },
     EXTRA_CATASTROPHE_107(EventCategory.MOBS) {
         @Override
@@ -1369,7 +1369,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_109(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 8, 14).below(), 5); return "Метеорит расколол землю! Разрушено блоков: " + n; }
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 8, 14).below(), 5); return "Метеорит расколол землю мощнейшим ударом!"; }
     },
     EXTRA_CATASTROPHE_110(EventCategory.MOBS) {
         @Override
@@ -1389,7 +1389,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_114(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 6, 14, 28, 48); return "Сейсмическая волна прокатилась по земле! Уничтожено блоков: " + n; }
+        String apply(ServerPlayer player) { int n = removeBlockBurst(player, 6, 14, 28, 48); return "Сейсмическая волна прокатилась по земле, сокрушая всё на пути!"; }
     },
     EXTRA_CATASTROPHE_115(EventCategory.OTHER) {
         @Override
@@ -1401,7 +1401,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_117(EventCategory.BLOCKS) {
         @Override
-        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 2, 5).below(), 3); return "Взрыв прямо рядом! Разрушено блоков: " + n; }
+        String apply(ServerPlayer player) { int n = createCrater(player, randomSurfacePosition(player, 2, 5).below(), 3); return "Взрыв прогремел прямо рядом с вами!"; }
     },
     EXTRA_CATASTROPHE_118(EventCategory.MOBS) {
         @Override
@@ -1966,7 +1966,7 @@ enum MinuteEvent {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
             floodChunkPatch(player, center, 6);
-            return "ПРОРЫВ ВОДЫ! Часть чанка затоплена. Размещено водяных !";
+            return "ПРОРЫВ ВОДЫ! Часть чанка затоплена.";
         }
     },
     CHUNK_MAGMA_FAULT(EventCategory.BLOCKS) {
