@@ -419,7 +419,7 @@ public final class MinuteEventsMod implements ModInitializer {
                 MinuteEvent candidate;
                 if (forceGood) {
                     candidate = MinuteEvent.randomGoodEvent();
-                } else if (ThreadLocalRandom.current().nextInt(100) < 30) {
+                } else if (ThreadLocalRandom.current().nextInt(100) < 10) {
                     if (player.serverLevel().dimension() == Level.NETHER) {
                         candidate = randomNetherEvent(player);
                     } else if (player.serverLevel().dimension() == Level.END) {
