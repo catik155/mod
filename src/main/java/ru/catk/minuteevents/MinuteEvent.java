@@ -52,6 +52,9 @@ enum EventCategory {
     }
 
     static EventCategory fromConfigKey(String key) {
+        if ("traps".equals(key)) {
+            return WALLS;
+        }
         for (EventCategory category : values()) {
             if (category.isConfigurable() && category.configKey.equals(key)) {
                 return category;
