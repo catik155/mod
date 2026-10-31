@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 enum EventCategory {
     BLOCKS("blocks", "разрушение блоков", 17),
     CAGES("cages", "клетки", 17),
-    WALLS("walls", "стены", 8),
+    WALLS("walls", "ловушки и взрывы", 8),
     MOBS("mobs", "мобы", 17),
     OTHER("other", "обычные события", 0);
 
@@ -151,34 +151,22 @@ enum MinuteEvent {
     STONE_SPIKES(EventCategory.WALLS) {
         @Override
         String apply(ServerPlayer player) {
-            int placed = buildPillars(player, randomSurfacePosition(player, 2, 4));
-            return placed > 0
-                ? "Из земли рядом вырвались каменные столбы!"
-                : "Каменным столбам не хватило свободного места.";
+            int n = triggerExplosion(player, 3, 6);
+            return "Земля содрогнулась от взрыва рядом!";
         }
     },
     SAND_WALL(EventCategory.WALLS) {
         @Override
         String apply(ServerPlayer player) {
-            int placed = buildWall(
-                player,
-                randomSurfacePosition(player, 5, 10),
-                Blocks.SAND.defaultBlockState(),
-                2,
-                3
-            );
-            return placed > 0
-                ? "В 5–10 блоках выросла песчаная стена."
-                : "Песчаную стену построить не удалось.";
+            int n = placeFloorTrap(player, 5, 9, Blocks.MAGMA_BLOCK.defaultBlockState(), 5);
+            return n > 0 ? "Под ногами появилась магмовая ловушка!" : "Ловушка не смогла сработать.";
         }
     },
     STONE_BRIDGE(EventCategory.WALLS) {
         @Override
         String apply(ServerPlayer player) {
-            int placed = buildBridge(player, randomSurfacePosition(player, 5, 10));
-            return placed > 0
-                ? "В 5–10 блоках появился каменный мост."
-                : "Мост построить не удалось: участок занят.";
+            int n = buildWebSnare(player);
+            return n > 0 ? "Паутина захватила пространство вокруг вас!" : "Ловушка не смогла раскрыться.";
         }
     },
     ANIMAL_HERD(EventCategory.MOBS) {
@@ -318,10 +306,8 @@ enum MinuteEvent {
     STONE_BARRICADE(EventCategory.WALLS) {
         @Override
         String apply(ServerPlayer player) {
-            int placed = buildStoneWall(player, randomSurfacePosition(player, 5, 10));
-            return placed > 0
-                ? "В 5–10 блоках от вас выросла каменная стена."
-                : "Каменную стену построить не удалось: участок занят.";
+            int n = triggerExplosion(player, 6, 10);
+            return n > 0 ? "В стороне прогремел мощный взрыв!" : "Взрыв не удалось запустить.";
         }
     },
     HOSTILE_VISITOR(EventCategory.MOBS) {
@@ -883,7 +869,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_004(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 7); return "Взрывная ловушка сработала неподалёку!"; }
     },
     EXTRA_CATASTROPHE_005(EventCategory.OTHER) {
         @Override
@@ -903,7 +889,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_009(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState(), 6); return n > 0 ? "Магмовая ловушка появилась рядом!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_010(EventCategory.OTHER) {
         @Override
@@ -923,7 +909,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_014(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.TNT.defaultBlockState(), 3); return n > 0 ? "На земле заложена взрывная ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_015(EventCategory.OTHER) {
         @Override
@@ -943,7 +929,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_019(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 5, 9); return "Мощный взрыв прогремел рядом!"; }
     },
     EXTRA_CATASTROPHE_020(EventCategory.OTHER) {
         @Override
@@ -963,7 +949,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_024(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = buildWebSnare(player); return n > 0 ? "Паутина-ловушка опутала вас!" : "Паутина не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_025(EventCategory.OTHER) {
         @Override
@@ -983,7 +969,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_029(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.CAMPFIRE.defaultBlockState(), 4); return n > 0 ? "На земле вспыхнула огненная ловушка!" : "Огненная ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_030(EventCategory.OTHER) {
         @Override
@@ -1003,7 +989,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_034(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return "Серия взрывов прогремела неподалёку!"; }
     },
     EXTRA_CATASTROPHE_035(EventCategory.OTHER) {
         @Override
@@ -1023,7 +1009,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_039(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.COBWEB.defaultBlockState(), 5); return n > 0 ? "Липкая паутина перекрыла путь!" : "Паутина не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_040(EventCategory.OTHER) {
         @Override
@@ -1043,7 +1029,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_044(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 6); return "Сюрприз! Рядом сработала TNT-ловушка!"; }
     },
     EXTRA_CATASTROPHE_045(EventCategory.OTHER) {
         @Override
@@ -1063,7 +1049,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_049(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState(), 5); return n > 0 ? "Магмовые плиты стали опасной ловушкой!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_050(EventCategory.OTHER) {
         @Override
@@ -1083,7 +1069,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_054(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 6, 10); return "Далёкий грохот — мощный взрыв рядом!"; }
     },
     EXTRA_CATASTROPHE_055(EventCategory.OTHER) {
         @Override
@@ -1103,7 +1089,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_059(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.TNT.defaultBlockState(), 4); return n > 0 ? "Под ногами спрятана TNT-ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_060(EventCategory.OTHER) {
         @Override
@@ -1123,7 +1109,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_064(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = buildWebSnare(player); return n > 0 ? "Паутина захлопнулась вокруг вас!" : "Ловушка не смогла раскрыться."; }
     },
     EXTRA_CATASTROPHE_065(EventCategory.OTHER) {
         @Override
@@ -1143,7 +1129,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_069(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 5, 9); return "Взрыв разметал блоки поблизости!"; }
     },
     EXTRA_CATASTROPHE_070(EventCategory.OTHER) {
         @Override
@@ -1163,7 +1149,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_074(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.CAMPFIRE.defaultBlockState(), 5); return n > 0 ? "Огненная западня появилась рядом!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_075(EventCategory.OTHER) {
         @Override
@@ -1183,7 +1169,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_079(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return "Взрывная волна прокатилась рядом!"; }
     },
     EXTRA_CATASTROPHE_080(EventCategory.OTHER) {
         @Override
@@ -1203,7 +1189,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_084(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.COBBLESTONE.defaultBlockState(), 2, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.COBWEB.defaultBlockState(), 4); return n > 0 ? "Ловушка из паутины появилась рядом!" : "Паутина не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_085(EventCategory.OTHER) {
         @Override
@@ -1223,7 +1209,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_089(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.MAGMA_BLOCK.defaultBlockState(), 3, 5); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 7); return "БА-БАХ! Взрыв прогремел рядом!"; }
     },
     EXTRA_CATASTROPHE_090(EventCategory.OTHER) {
         @Override
@@ -1243,7 +1229,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_094(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.NETHERRACK.defaultBlockState(), 4, 4); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState(), 6); return n > 0 ? "Пол раскалился — магмовая ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_095(EventCategory.OTHER) {
         @Override
@@ -1263,7 +1249,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_099(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int placed = buildWall(player, randomSurfacePosition(player, 3, 7), Blocks.STONE_BRICKS.defaultBlockState(), 5, 3); return placed > 0 ? "опасная стена перекрыла путь!" : "стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 6, 10); return "Большой взрыв прогремел неподалёку!"; }
     },
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
@@ -1283,7 +1269,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_104(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int n = buildWall(player, randomSurfacePosition(player, 2, 6), Blocks.OBSIDIAN.defaultBlockState(), 5, 5); return n > 0 ? "Обсидиановая стена отрезала путь!" : "Стена не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.TNT.defaultBlockState(), 5); return n > 0 ? "Обнаружена TNT-ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_105(EventCategory.CAGES) {
         @Override
@@ -1315,7 +1301,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_112(EventCategory.WALLS) {
         @Override
-        String apply(ServerPlayer player) { int n = buildWall(player, randomSurfacePosition(player, 3, 8), Blocks.MAGMA_BLOCK.defaultBlockState(), 5, 6); return n > 0 ? "Магмовая баррикада перекрыла путь!" : "Баррикада не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 7); return "Цепная взрывная ловушка сработала рядом!"; }
     },
     EXTRA_CATASTROPHE_113(EventCategory.MOBS) {
         @Override
@@ -2414,6 +2400,29 @@ enum MinuteEvent {
             }
         }
 
+        return placed;
+    }
+
+    private static int triggerExplosion(ServerPlayer player, int minDistance, int maxDistance) {
+        ServerLevel level = player.serverLevel();
+        BlockPos site = randomMobSpawnPosition(player, minDistance, maxDistance);
+        var tnt = EntityType.TNT.spawn(level, site, MobSpawnType.EVENT);
+        if (tnt == null) return 0;
+        level.playSound(null, site, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
+        return 1;
+    }
+
+    private static int placeFloorTrap(ServerPlayer player, int minDistance, int maxDistance, BlockState trap, int radius) {
+        ServerLevel level = player.serverLevel();
+        BlockPos center = randomSurfacePosition(player, minDistance, maxDistance).below();
+        int placed = 0;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (dx * dx + dz * dz > 2) continue;
+                BlockPos pos = center.offset(dx, 0, dz);
+                if (placeIfOpen(level, pos, trap)) placed++;
+            }
+        }
         return placed;
     }
 
