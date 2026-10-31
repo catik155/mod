@@ -256,7 +256,9 @@ public final class MinuteEventsMod implements ModInitializer {
         java.util.List<EventCandidate> candidates = candidatesFor(player);
         int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
         StringBuilder display = new StringBuilder(last).append("\nШансы следующих событий:");
-        for (EventCandidate candidate : candidates) {
+        for (EventCandidate candidate : candidates.stream()
+            .sorted(java.util.Comparator.comparingInt(EventCandidate::weight).reversed())
+            .toList()) {
             display.append("\n")
                 .append(candidate.event().displayName())
                 .append(" — ")
