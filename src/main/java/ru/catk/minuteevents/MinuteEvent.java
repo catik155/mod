@@ -1745,6 +1745,149 @@ enum MinuteEvent {
             return "Поблизости вода! Подводное дыхание на 15 секунд.";
         }
     },
+
+    CAVE_AMETHYST_RESONANCE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.AMETHYST_SHARD, 4));
+            giveItem(player, new ItemStack(Items.GLOW_BERRIES, 3));
+            player.serverLevel().sendParticles(ParticleTypes.AMETHYST_BLOCK, player.getX(), player.getY() + 1.0, player.getZ(), 18, 0.8, 0.7, 0.8, 0.03);
+            return "Кристаллы в пещере отозвались на ваш голос: 4 осколка аметиста и светящиеся ягоды!";
+        }
+    },
+    CAVE_BAT_ORACLE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.BAT}, 4, 3, 7);
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 18, 0));
+            return "Летучие мыши вывели вас из темноты: " + n + " проводников и ночное зрение на 18 секунд.";
+        }
+    },
+    CAVE_SILVERFISH_BREAKOUT(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SILVERFISH}, 3, 4, 7);
+            player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SILVERFISH_HURT, SoundSource.HOSTILE, 1.0F, 0.7F);
+            return "Из трещин вырвался выводок чешуйниц: " + n + "! Похоже, камень был не совсем камнем.";
+        }
+    },
+    FOREST_WOLF_CIRCLE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.WOLF}, 3, 3, 6);
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 12, 0));
+            return "Лесная стая окружила вас защитным кругом: " + n + " волков и сопротивление урону на 12 секунд.";
+        }
+    },
+    FOREST_BEE_COURIER(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.BEE}, 3, 2, 5);
+            giveItem(player, new ItemStack(Items.HONEY_BOTTLE, 2));
+            return "Пчёлы принесли лесной гостинец: " + n + " пчёл и 2 бутылочки мёда.";
+        }
+    },
+    PLAINS_HORSE_CARAVAN(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.HORSE}, 2, 4, 7);
+            giveItem(player, new ItemStack(Items.SADDLE, 1));
+            return "Через равнину прошёл караван: " + n + " лошадей. Одна оставила вам седло!";
+        }
+    },
+    RIVER_FROG_CHORUS(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.FROG}, 3, 2, 5);
+            player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 20 * 20, 0));
+            return "Береговой хор квакнул в вашу честь: " + n + " лягушек и дыхание под водой на 20 секунд.";
+        }
+    },
+    BEACH_TURTLE_ESCORT(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.TURTLE}, 2, 3, 6);
+            giveItem(player, new ItemStack(Items.SCUTE, 1));
+            return "Морские черепахи проводят вас вдоль берега: " + n + " черепах и один щиток.";
+        }
+    },
+    OCEAN_GUARDIAN_WARNING(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.GUARDIAN}, 2, 5, 8);
+            player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 20 * 15, 0));
+            return "Стражи заметили вас в глубине: " + n + " стражей. Вода будто предупреждает — дыхание на 15 секунд.";
+        }
+    },
+    SNOW_FOX_COURIER(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.FOX}, 2, 3, 6);
+            giveItem(player, new ItemStack(Items.SWEET_BERRIES, 5));
+            return "Снежные лисы оставили след к тайнику: " + n + " лис и 5 сладких ягод.";
+        }
+    },
+    DESERT_CAMEL_CARAVAN(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.CAMEL}, 1, 5, 8);
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 16, 0));
+            return "Из марева вышел караван верблюдов: " + n + ". Попутный ветер ускоряет вас на 16 секунд.";
+        }
+    },
+    NETHER_GHAST_SHADOW(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.GHAST}, 1, 8, 12);
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 10, 0));
+            return "Над лавовым морем проплыла тень гастa: " + n + ". Адская жара временно не страшна — огнестойкость 10 секунд.";
+        }
+    },
+    NETHER_WITHER_SKELETON_PATROL(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.WITHER_SKELETON}, 2, 5, 8);
+            return "Из крепости вышел патруль wither-скелетов: " + n + "! Не дайте им окружить себя.";
+        }
+    },
+    NETHER_PIGLIN_BRUTE_TRIBUTE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.PIGLIN_BRUTE}, 1, 6, 9);
+            return "Пиглин-брут требует дань за проход: " + n + " охранник уже направляется к вам!";
+        }
+    },
+    NETHER_SOULFIRE_BLESSING(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 14, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 14, 0));
+            player.serverLevel().sendParticles(ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.7, 0.8, 0.7, 0.02);
+            return "Синее пламя долины душ признало вас: огнестойкость и сопротивление урону на 14 секунд.";
+        }
+    },
+    END_SHULKER_CIRCLE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SHULKER}, 2, 6, 9);
+            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 12, 0));
+            return "Шалкеры заняли позиции вокруг острова: " + n + ". На всякий случай — замедленное падение на 12 секунд.";
+        }
+    },
+    END_VOID_GIFT(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.ENDER_PEARL, 3));
+            giveItem(player, new ItemStack(Items.PHANTOM_MEMBRANE, 1));
+            player.serverLevel().sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1.0, player.getZ(), 28, 0.8, 0.8, 0.8, 0.12);
+            return "Пустота оставила подношение: 3 жемчуга Края и мембрана фантома.";
+        }
+    },
+    END_ENDERMAN_CARAVAN(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ENDERMAN}, 3, 7, 10);
+            return "По острову проходит караван эндерменов: " + n + ". Смотрите под ноги, не им в глаза.";
+        }
+    },
+    END_CHORUS_TELEPORT(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.CHORUS_FRUIT, 4));
+            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 20, 0));
+            player.serverLevel().sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1.0, player.getZ(), 32, 0.6, 0.8, 0.6, 0.15);
+            return "Хорусный всплеск исказил пространство: 4 плода хоруса и замедленное падение на 20 секунд.";
+        }
+    },
+    END_PHANTOM_ECLIPSE(EventCategory.OTHER) {
+        @Override String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.PHANTOM}, 3, 6, 9);
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 10, 0));
+            return "Над островом случилось затмение: " + n + " фантомов и ночное зрение на 10 секунд.";
+        }
+    },
+
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
         String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
