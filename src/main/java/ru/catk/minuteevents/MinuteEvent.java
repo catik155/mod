@@ -1965,21 +1965,21 @@ enum MinuteEvent {
     CHUNK_FLASH_FLOOD(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = floodChunkPatch(player, center, 3);
+            int changed = floodChunkPatch(player, center, 4);
             return "ПРОРЫВ ВОДЫ! Часть чанка затоплена. Размещено водяных блоков: " + changed + ".";
         }
     },
     CHUNK_MAGMA_FAULT(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = replaceChunkSurface(player, center, 2, Blocks.MAGMA_BLOCK.defaultBlockState(), 0);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.MAGMA_BLOCK.defaultBlockState(), 0);
             return "МАГМАТИЧЕСКИЙ РАЗЛОМ! Поверхность чанка покрылась магмой: " + changed + " блоков.";
         }
     },
     CHUNK_GLASSIFICATION(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = replaceChunkSurface(player, center, 3, Blocks.GLASS.defaultBlockState(), 1);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.GLASS.defaultBlockState(), 0);
             return "СТЕКЛЯНИЕ ЧАНКА! Земля на участке превратилась в стекло: " + changed + " блоков.";
         }
     },
@@ -2000,21 +2000,21 @@ enum MinuteEvent {
     CHUNK_ICE_AGE(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = replaceChunkSurface(player, center, 3, Blocks.ICE.defaultBlockState(), 1);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.ICE.defaultBlockState(), 0);
             return "ЛОКАЛЬНЫЙ ЛЕДНИК! Поверхность чанка промёрзла: " + changed + " блоков заменено льдом.";
         }
     },
     CHUNK_SCULK_INFECTION(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = replaceChunkSurface(player, center, 3, Blocks.SCULK.defaultBlockState(), 0);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.SCULK.defaultBlockState(), 0);
             return "СКАЛКОВАЯ ИНФЕКЦИЯ! Заражение поглотило поверхность чанка: " + changed + " блоков.";
         }
     },
     CHUNK_VOID_BITE(EventCategory.BLOCKS) {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
-            int changed = removeChunkSurface(player, center, 2, 2, 48);
+            int changed = removeChunkSurface(player, center, 3, 3, 90);
             return "УКУС ПУСТОТЫ! Кусок поверхности и породы исчез из чанка. Удалено блоков: " + changed + ".";
         }
     },
@@ -2025,6 +2025,91 @@ enum MinuteEvent {
             return "ДРЕВНЕЕ ИСКАЖЕНИЕ! Поверхность чанка стала древним сланцем: " + changed + " блоков.";
         }
     },
+    CHUNK_TIDAL_WAVE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = floodChunkPatch(player, center, 4);
+            return "ЧАНКОВОЕ ЦУНАМИ! Огромная волна затопила участок чанка: " + changed + " блоков воды.";
+        }
+    },
+    CHUNK_DEEP_FLOOD(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = floodChunkPatch(player, center, 5);
+            return "ГЛУБОКОЕ ЗАТОПЛЕНИЕ! Вода захватила большую часть участка чанка: " + changed + " блоков.";
+        }
+    },
+    CHUNK_MAGMA_SURGE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 3, Blocks.MAGMA_BLOCK.defaultBlockState(), 0);
+            return "МАГМОВАЯ ВОЛНА! Раскалённая магма захватила большую площадь: " + changed + " блоков.";
+        }
+    },
+    CHUNK_MAGMA_CRACK(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.MAGMA_BLOCK.defaultBlockState(), 1);
+            return "РАЗЛОМ МАГМЫ! По чанку расползлись опасные магмовые пятна: " + changed + " блоков.";
+        }
+    },
+    CHUNK_GLASS_STORM(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.GLASS.defaultBlockState(), 0);
+            return "СТЕКЛЯНЫЙ ШТОРМ! Большая часть участка покрылась стеклом: " + changed + " блоков.";
+        }
+    },
+    CHUNK_GLASS_FIELD(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 5, Blocks.GLASS.defaultBlockState(), 1);
+            return "СТЕКЛЯННОЕ ПОЛЕ! Стекло распространилось по огромной площади: " + changed + " блоков.";
+        }
+    },
+    CHUNK_PERMAFROST(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.PACKED_ICE.defaultBlockState(), 0);
+            return "ВЕЧНАЯ МЕРЗЛОТА! Участок чанка покрылся плотным льдом: " + changed + " блоков.";
+        }
+    },
+    CHUNK_GLACIER_COLLAPSE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 5, Blocks.BLUE_ICE.defaultBlockState(), 1);
+            return "ОБВАЛ ЛЕДНИКА! Ледяная корка захватила огромную площадь: " + changed + " блоков.";
+        }
+    },
+    CHUNK_SCULK_SPREAD(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 4, Blocks.SCULK.defaultBlockState(), 0);
+            return "СКАЛКОВОЕ РАСПРОСТРАНЕНИЕ! Заражение поглотило большую часть участка: " + changed + " блоков.";
+        }
+    },
+    CHUNK_SCULK_OUTBREAK(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = replaceChunkSurface(player, center, 5, Blocks.SCULK.defaultBlockState(), 1);
+            return "СКАЛКОВАЯ ЭПИДЕМИЯ! Скulk захватывает огромную площадь чанка: " + changed + " блоков.";
+        }
+    },
+    CHUNK_VOID_RIFT(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = removeChunkSurface(player, center, 3, 3, 90);
+            return "РАЗЛОМ ПУСТОТЫ! Глубокая трещина вырвала целый участок породы: " + changed + " блоков.";
+        }
+    },
+    CHUNK_VOID_SINKHOLE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            int changed = removeChunkSurface(player, center, 4, 2, 100);
+            return "ВОРОНКА ПУСТОТЫ! Огромная область поверхности провалилась: " + changed + " блоков.";
+        }
+    },
+
 
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
