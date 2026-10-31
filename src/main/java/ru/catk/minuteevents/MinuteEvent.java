@@ -1750,7 +1750,7 @@ enum MinuteEvent {
         @Override String apply(ServerPlayer player) {
             giveItem(player, new ItemStack(Items.AMETHYST_SHARD, 4));
             giveItem(player, new ItemStack(Items.GLOW_BERRIES, 3));
-            player.serverLevel().sendParticles(ParticleTypes.AMETHYST_BLOCK, player.getX(), player.getY() + 1.0, player.getZ(), 18, 0.8, 0.7, 0.8, 0.03);
+            player.serverLevel().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 18, 0.8, 0.7, 0.8, 0.03);
             return "Кристаллы в пещере отозвались на ваш голос: 4 осколка аметиста и светящиеся ягоды!";
         }
     },
@@ -1799,7 +1799,7 @@ enum MinuteEvent {
     BEACH_TURTLE_ESCORT(EventCategory.OTHER) {
         @Override String apply(ServerPlayer player) {
             int n = spawnGroup(player, new EntityType<?>[] {EntityType.TURTLE}, 2, 3, 6);
-            giveItem(player, new ItemStack(Items.SCUTE, 1));
+            giveItem(player, new ItemStack(Items.SEAGRASS, 1));
             return "Морские черепахи проводят вас вдоль берега: " + n + " черепах и один щиток.";
         }
     },
