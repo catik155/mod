@@ -2090,6 +2090,27 @@ enum MinuteEvent {
         return words.substring(0, 1).toUpperCase(java.util.Locale.forLanguageTag("ru-RU")) + words.substring(1);
     }
 
+    boolean isLargeScale() {
+        String key = name();
+        return key.startsWith("CHUNK_")
+            || key.startsWith("LARGE_")
+            || key.startsWith("WIDE_")
+            || key.startsWith("EXTRA_CATASTROPHE_")
+            || key.contains("INVASION")
+            || key.contains("RAID")
+            || key.contains("SWARM")
+            || key.contains("HORDE")
+            || key.contains("APOCALYPSE")
+            || key.contains("CATACLYSM")
+            || key.contains("ERUPTION")
+            || key.contains("STORM")
+            || key.contains("QUAKE")
+            || key.contains("FLOOD")
+            || key.contains("COLLAPSE")
+            || key.contains("ARMY")
+            || key.contains("AMBUSH");
+    }
+
     EventCategory category() { return category; }
 
     boolean isGood() {
