@@ -108,7 +108,7 @@ public final class MinuteEventsMod implements ModInitializer {
             GameplaySettingsPayload.TYPE,
             (payload, context) -> context.server().execute(() -> {
                 ServerPlayer host = context.player();
-                if (!host.hasPermissions(2)) {
+                if (!host.hasPermissions(2) && !context.server().isSingleplayerOwner(host.getGameProfile())) {
                     host.displayClientMessage(Component.literal("Настройки игрового процесса доступны только хосту."), true);
                     return;
                 }
