@@ -200,28 +200,33 @@ public final class MinuteEventsMod implements ModInitializer {
         if (blindMode) {
             return "Событие скрыто";
         }
-        if (previewMode) {
-            java.util.List<EventCandidate> candidates = candidatesFor(player);
-            int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
-            StringBuilder display = new StringBuilder("10 возможных событий:");
-            for (EventCandidate candidate : candidates) {
-                display.append("\n")
-                    .append(candidate.event().displayName())
-                    .append(" — ")
-                    .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
-            }
-            MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
-            if (previous != null) display.append("\nПоследнее событие: ").append(previous.displayName());
-            return display.toString();
-        }
-        MinuteEvent selected = upcomingSelected.get(player.getUUID());
-        if (selected == null) {
-            candidatesFor(player);
-            selected = upcomingSelected.get(player.getUUID());
-        }
+
         MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
-        String last = previous == null ? "Последнее событие: ещё не было" : "Последнее событие: " + previous.displayName();
-        return last + "\n" + (selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName());
+        String last = previous == null
+            ? "Последнее событие: ещё не было"
+            : "Последнее событие: " + previous.displayName();
+
+        if (previewMode) {
+            MinuteEvent selected = upcomingSelected.get(player.getUUID());
+            if (selected == null) {
+                candidatesFor(player);
+                selected = upcomingSelected.get(player.getUUID());
+            }
+            return last + "\\n" + (selected == null
+                ? "Следующее событие определяется..."
+                : "Следующее событие: " + selected.displayName());
+        }
+
+        java.util.List<EventCandidate> candidates = candidatesFor(player);
+        int totalWeight = candidates.stream().mapToInt(EventCandidate::weight).sum();
+        StringBuilder display = new StringBuilder("Шансы следующих событий:");
+        for (EventCandidate candidate : candidates) {
+            display.append("\\n")
+                .append(candidate.event().displayName())
+                .append(" — ")
+                .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
+        }
+        return display.toString();
     }
 
     private double eventChance(MinuteEvent event, int badStreak) {
