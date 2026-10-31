@@ -384,9 +384,9 @@ public final class MinuteEventsMod implements ModInitializer {
             int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
             MinuteEvent event;
             if (player.serverLevel().dimension() == Level.NETHER) {
-                event = badStreak >= 3 ? randomNetherGoodEvent() : randomNetherEvent();
+                event = badStreak >= 3 ? randomNetherGoodEvent() : randomNetherEvent(player);
             } else if (player.serverLevel().dimension() == Level.END) {
-                event = badStreak >= 3 ? randomEndGoodEvent() : randomEndEvent();
+                event = badStreak >= 3 ? randomEndGoodEvent() : randomEndEvent(player);
             } else {
                 event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : randomOverworldEvent(player);
             }
@@ -411,16 +411,16 @@ public final class MinuteEventsMod implements ModInitializer {
     private MinuteEvent[] netherEventsFor(ServerPlayer player) {
         var biome = player.serverLevel().getBiome(player.blockPosition());
         if (biome.is(Biomes.SOUL_SAND_VALLEY)) {
-            return new MinuteEvent[] {MinuteEvent.NETHER_SOUL_VALLEY_SKELETONS, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT};
+            return new MinuteEvent[] {MinuteEvent.NETHER_SOUL_VALLEY_SKELETONS, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_SOULFIRE_BLESSING};
         }
         if (biome.is(Biomes.CRIMSON_FOREST)) {
-            return new MinuteEvent[] {MinuteEvent.NETHER_CRIMSON_ROOTS, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_GOLD_GIFT};
+            return new MinuteEvent[] {MinuteEvent.NETHER_CRIMSON_ROOTS, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_SOULFIRE_BLESSING, MinuteEvent.NETHER_WITHER_SKELETON_PATROL};
         }
         if (biome.is(Biomes.WARPED_FOREST)) {
-            return new MinuteEvent[] {MinuteEvent.NETHER_WARPED_ENDERMEN, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_STRIDER_RIDE};
+            return new MinuteEvent[] {MinuteEvent.NETHER_WARPED_ENDERMEN, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_STRIDER_RIDE, MinuteEvent.NETHER_GHAST_SHADOW, MinuteEvent.NETHER_WITHER_SKELETON_PATROL};
         }
         if (biome.is(Biomes.BASALT_DELTAS)) {
-            return new MinuteEvent[] {MinuteEvent.NETHER_BASALT_MAGMA, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE};
+            return new MinuteEvent[] {MinuteEvent.NETHER_BASALT_MAGMA, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GHAST_SHADOW};
         }
         return new MinuteEvent[] {MinuteEvent.NETHER_PIGLIN_VISIT, MinuteEvent.NETHER_MAGMA_CUBES, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.NETHER_GOLD_GIFT, MinuteEvent.NETHER_HOGLIN_SCOUT, MinuteEvent.NETHER_STRIDER_RIDE};
     }
@@ -428,15 +428,15 @@ public final class MinuteEventsMod implements ModInitializer {
     private MinuteEvent[] endEventsFor(ServerPlayer player) {
         var biome = player.serverLevel().getBiome(player.blockPosition());
         if (biome.is(Biomes.END_HIGHLANDS)) {
-            return new MinuteEvent[] {MinuteEvent.END_HIGH_ISLAND_SHULKER, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_ENDERMITE_AMBUSH};
+            return new MinuteEvent[] {MinuteEvent.END_HIGH_ISLAND_SHULKER, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_ENDERMITE_AMBUSH, MinuteEvent.END_SHULKER_CIRCLE, MinuteEvent.END_VOID_GIFT};
         }
         if (biome.is(Biomes.END_MIDLANDS)) {
-            return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_CHORUS_BLOOM, MinuteEvent.END_ENDERMITE_AMBUSH, MinuteEvent.END_SLOW_FALL};
+            return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_CHORUS_BLOOM, MinuteEvent.END_ENDERMITE_AMBUSH, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_ENDERMAN_CARAVAN, MinuteEvent.END_CHORUS_TELEPORT};
         }
         if (biome.is(Biomes.SMALL_END_ISLANDS) || biome.is(Biomes.END_BARRENS)) {
-            return new MinuteEvent[] {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.ENDERMAN_VISIT};
+            return new MinuteEvent[] {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_VOID_GIFT, MinuteEvent.END_PHANTOM_ECLIPSE};
         }
-        return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_SHULKER_SURPRISE, MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT};
+        return new MinuteEvent[] {MinuteEvent.ENDERMAN_VISIT, MinuteEvent.END_SHULKER_SURPRISE, MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_SHULKER_CIRCLE, MinuteEvent.END_ENDERMAN_CARAVAN, MinuteEvent.END_CHORUS_TELEPORT, MinuteEvent.END_PHANTOM_ECLIPSE};
     }
 
     private boolean hasNearbyBlock(ServerPlayer player, net.minecraft.world.level.block.Block block) {
@@ -451,23 +451,33 @@ public final class MinuteEventsMod implements ModInitializer {
         var biome = player.serverLevel().getBiome(player.blockPosition());
         MinuteEvent[] events;
         if (biome.is(Biomes.DESERT)) {
-            events = new MinuteEvent[] {MinuteEvent.DESERT_HUSK_PATROL, MinuteEvent.BADLANDS_GOLD_GIFT, MinuteEvent.QUICK_FEET};
+            events = new MinuteEvent[] {MinuteEvent.DESERT_HUSK_PATROL, MinuteEvent.BADLANDS_GOLD_GIFT, MinuteEvent.QUICK_FEET, MinuteEvent.DESERT_CAMEL_CARAVAN};
         } else if (biome.is(Biomes.BADLANDS) || biome.is(Biomes.ERODED_BADLANDS) || biome.is(Biomes.WOODED_BADLANDS)) {
             events = new MinuteEvent[] {MinuteEvent.BADLANDS_GOLD_GIFT, MinuteEvent.DESERT_HUSK_PATROL, MinuteEvent.SECOND_WIND};
         } else if (biome.is(Biomes.JUNGLE) || biome.is(Biomes.BAMBOO_JUNGLE) || biome.is(Biomes.SPARSE_JUNGLE)) {
-            events = new MinuteEvent[] {MinuteEvent.JUNGLE_PARROT_VISIT, MinuteEvent.JUNGLE_OCELOT_VISIT, MinuteEvent.FRIENDLY_VISITOR};
+            events = new MinuteEvent[] {MinuteEvent.JUNGLE_PARROT_VISIT, MinuteEvent.JUNGLE_OCELOT_VISIT, MinuteEvent.FRIENDLY_VISITOR, MinuteEvent.FOREST_BEE_COURIER};
         } else if (biome.is(Biomes.SWAMP) || biome.is(Biomes.MANGROVE_SWAMP)) {
             events = new MinuteEvent[] {MinuteEvent.SWAMP_SLIME_VISIT, MinuteEvent.SECOND_WIND, MinuteEvent.WATER_NEARBY_BREATHING};
         } else if (biome.is(Biomes.SNOWY_PLAINS) || biome.is(Biomes.SNOWY_TAIGA) || biome.is(Biomes.ICE_SPIKES)) {
-            events = new MinuteEvent[] {MinuteEvent.SNOWY_STRAY_PATROL, MinuteEvent.QUICK_FEET, MinuteEvent.SECOND_WIND};
+            events = new MinuteEvent[] {MinuteEvent.SNOWY_STRAY_PATROL, MinuteEvent.QUICK_FEET, MinuteEvent.SECOND_WIND, MinuteEvent.SNOW_FOX_COURIER};
         } else if (biome.is(Biomes.FROZEN_PEAKS) || biome.is(Biomes.JAGGED_PEAKS) || biome.is(Biomes.STONY_PEAKS)) {
             events = new MinuteEvent[] {MinuteEvent.MOUNTAIN_GOAT_VISIT, MinuteEvent.SNOWY_STRAY_PATROL, MinuteEvent.SECOND_WIND};
         } else if (biome.is(Biomes.OCEAN) || biome.is(Biomes.DEEP_OCEAN) || biome.is(Biomes.COLD_OCEAN) || biome.is(Biomes.WARM_OCEAN) || biome.is(Biomes.LUKEWARM_OCEAN) || biome.is(Biomes.FROZEN_OCEAN)) {
-            events = new MinuteEvent[] {MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.END_PEARL_GIFT};
+            events = new MinuteEvent[] {MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.END_PEARL_GIFT, MinuteEvent.OCEAN_GUARDIAN_WARNING};
         } else if (biome.is(Biomes.MUSHROOM_FIELDS)) {
             events = new MinuteEvent[] {MinuteEvent.MUSHROOM_COW_VISIT, MinuteEvent.SECOND_WIND, MinuteEvent.FOOD_GIFT};
         } else if (biome.is(Biomes.CHERRY_GROVE)) {
             events = new MinuteEvent[] {MinuteEvent.CHERRY_BLOSSOM_GIFT, MinuteEvent.MOUNTAIN_GOAT_VISIT, MinuteEvent.FRIENDLY_VISITOR};
+        } else if (player.blockPosition().getY() < 45) {
+            events = new MinuteEvent[] {MinuteEvent.CAVE_AMETHYST_RESONANCE, MinuteEvent.CAVE_BAT_ORACLE, MinuteEvent.CAVE_SILVERFISH_BREAKOUT, MinuteEvent.SECOND_WIND};
+        } else if (biome.is(Biomes.FOREST) || biome.is(Biomes.FLOWER_FOREST) || biome.is(Biomes.BIRCH_FOREST) || biome.is(Biomes.DARK_FOREST)) {
+            events = new MinuteEvent[] {MinuteEvent.FOREST_WOLF_CIRCLE, MinuteEvent.FOREST_BEE_COURIER, MinuteEvent.FRIENDLY_VISITOR};
+        } else if (biome.is(Biomes.PLAINS) || biome.is(Biomes.SUNFLOWER_PLAINS)) {
+            events = new MinuteEvent[] {MinuteEvent.PLAINS_HORSE_CARAVAN, MinuteEvent.ANIMAL_HERD, MinuteEvent.FRIENDLY_VISITOR};
+        } else if (biome.is(Biomes.RIVER) || biome.is(Biomes.FROZEN_RIVER)) {
+            events = new MinuteEvent[] {MinuteEvent.RIVER_FROG_CHORUS, MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.OCEAN_DOLPHIN_VISIT};
+        } else if (biome.is(Biomes.BEACH) || biome.is(Biomes.SNOWY_BEACH)) {
+            events = new MinuteEvent[] {MinuteEvent.BEACH_TURTLE_ESCORT, MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.FOOD_GIFT};
         } else {
             if (hasNearbyBlock(player, Blocks.LAVA)) events = new MinuteEvent[] {MinuteEvent.LAVA_NEARBY_FIRE_RESISTANCE, MinuteEvent.NETHER_FIRE_RESISTANCE, MinuteEvent.SECOND_WIND};
             else if (hasNearbyBlock(player, Blocks.WATER)) events = new MinuteEvent[] {MinuteEvent.WATER_NEARBY_BREATHING, MinuteEvent.OCEAN_DOLPHIN_VISIT, MinuteEvent.SECOND_WIND};
@@ -478,7 +488,7 @@ public final class MinuteEventsMod implements ModInitializer {
         return events;
     }
 
-    private MinuteEvent randomNetherEvent() {
+    private MinuteEvent randomNetherEvent(ServerPlayer player) {
         MinuteEvent[] events = netherEventsFor(player);
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
@@ -488,13 +498,13 @@ public final class MinuteEventsMod implements ModInitializer {
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
-    private MinuteEvent randomEndEvent() {
+    private MinuteEvent randomEndEvent(ServerPlayer player) {
         MinuteEvent[] events = endEventsFor(player);
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
     private MinuteEvent randomEndGoodEvent() {
-        MinuteEvent[] events = {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_CHORUS_BLOOM};
+        MinuteEvent[] events = {MinuteEvent.END_CHORUS_GIFT, MinuteEvent.END_SLOW_FALL, MinuteEvent.END_PEARL_GIFT, MinuteEvent.END_CHORUS_BLOOM, MinuteEvent.END_VOID_GIFT, MinuteEvent.END_CHORUS_TELEPORT};
         return events[ThreadLocalRandom.current().nextInt(events.length)];
     }
 
