@@ -39,18 +39,14 @@ public final class MinuteEventsClient implements ClientModInitializer {
         );
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            var server = client.getSingleplayerServer();
-            if (server == null) {
+            if (client.player == null) {
                 promptedForLan = false;
                 return;
             }
-            if (!server.isPublished()) {
-                promptedForLan = false;
-                return;
-            }
-            if (!promptedForLan && client.player != null) {
+            boolean isHost = client.getSingleplayerServer() != null || client.player.hasPermissions(2);
+            if (isHost && !promptedForLan) {
                 promptedForLan = true;
-                client.setScreen(new MultiplayerModeScreen(client.screen));
+                client.setScreen(new GameplaySettingsScreen());
             }
         });
     }
