@@ -458,6 +458,9 @@ public final class MinuteEventsMod implements ModInitializer {
             java.util.ArrayList<EventCandidate> weighted = new java.util.ArrayList<>();
             for (MinuteEvent candidate : chosen) {
                 int weight = ThreadLocalRandom.current().nextInt(1, 101);
+                if (candidate.isLargeScale()) {
+                    weight *= 3;
+                }
                 if (!candidate.isGood()) {
                     weight = (int) Math.ceil(weight * 1.03);
                 }
