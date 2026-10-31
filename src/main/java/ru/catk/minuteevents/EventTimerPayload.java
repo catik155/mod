@@ -12,8 +12,8 @@ public record EventTimerPayload(int secondsRemaining, boolean timerVisible, Stri
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EventTimerPayload> CODEC =
         StreamCodec.of(
-            (buffer, payload) -> { buffer.writeVarInt(payload.secondsRemaining()); buffer.writeBoolean(payload.timerVisible()); buffer.writeUtf(payload.detail(), 256); },
-            buffer -> new EventTimerPayload(buffer.readVarInt(), buffer.readBoolean(), buffer.readUtf(256))
+            (buffer, payload) -> { buffer.writeVarInt(payload.secondsRemaining()); buffer.writeBoolean(payload.timerVisible()); buffer.writeUtf(payload.detail(), 4096); },
+            buffer -> new EventTimerPayload(buffer.readVarInt(), buffer.readBoolean(), buffer.readUtf(4096))
         );
 
     @Override
