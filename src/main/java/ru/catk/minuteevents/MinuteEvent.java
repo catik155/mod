@@ -1545,6 +1545,66 @@ enum MinuteEvent {
         @Override
         String apply(ServerPlayer player) { int n = spawnGroup(player, new EntityType<?>[] {EntityType.MAGMA_CUBE}, 4, 4, 8); return "Магмовые кубы прыгают вокруг: " + n + "!"; }
     },
+    NETHER_PIGLIN_VISIT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.PIGLIN}, 2, 4, 7);
+            return "Пиглины заглянули в гости: " + n + ". Не доставайте золото без спроса!";
+        }
+    },
+    NETHER_MAGMA_CUBES(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.MAGMA_CUBE}, 2, 4, 7);
+            return "Пара магмовых кубов решила размяться: " + n + ".";
+        }
+    },
+    NETHER_FIRE_RESISTANCE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 20, 0));
+            sparkle(player);
+            return "Огнестойкость на 20 секунд!";
+        }
+    },
+    NETHER_GOLD_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.GOLD_INGOT, 2));
+            sparkle(player);
+            return "Подарок из Нижнего мира: 2 золотых слитка!";
+        }
+    },
+    ENDERMAN_VISIT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.ENDERMAN}, 1, 5, 8);
+            return "Эндермен заглянул из пустоты: " + n + ". Не смотри ему в глаза!";
+        }
+    },
+    END_SHULKER_SURPRISE(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            int n = spawnGroup(player, new EntityType<?>[] {EntityType.SHULKER}, 1, 5, 8);
+            return "Неподалёку появился шалкер: " + n + ".";
+        }
+    },
+    END_CHORUS_GIFT(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            giveItem(player, new ItemStack(Items.CHORUS_FRUIT, 3));
+            sparkle(player);
+            return "Из Края передали 3 плода хоруса!";
+        }
+    },
+    END_SLOW_FALL(EventCategory.OTHER) {
+        @Override
+        String apply(ServerPlayer player) {
+            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 15, 0));
+            sparkle(player);
+            return "Замедленное падение на 15 секунд!";
+        }
+    },
     EXTRA_CATASTROPHE_120(EventCategory.MOBS) {
         @Override
         String apply(ServerPlayer player) { int n = spawnHordeIfAnotherPlayerNearby(player, new EntityType<?>[] {EntityType.CREEPER, EntityType.BLAZE, EntityType.WITCH, EntityType.SKELETON}, 24, 5, 14); return "Апокалиптическая волна! Врагов появилось: " + n; }
