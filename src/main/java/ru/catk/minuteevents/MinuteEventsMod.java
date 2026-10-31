@@ -53,7 +53,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private final Map<UUID, java.util.List<EventCandidate>> upcomingCandidates = new HashMap<>();
     private final Map<UUID, MinuteEvent> upcomingSelected = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
-    private final Map<UUID, MinuteEvent> lastTriggeredEvents = new HashMap<>();
+    private final Map<UUID, String> lastTriggeredEventDescriptions = new HashMap<>();
 
     private record EventCandidate(MinuteEvent event, int weight) {
         double percent(int totalWeight) {
@@ -107,7 +107,7 @@ public final class MinuteEventsMod implements ModInitializer {
             upcomingCandidates.clear();
             upcomingSelected.clear();
             badEventStreaks.clear();
-            lastTriggeredEvents.clear();
+            lastTriggeredEventDescriptions.clear();
             elapsedTicks = 0;
             timerSyncTicks = 0;
         });
@@ -237,10 +237,10 @@ public final class MinuteEventsMod implements ModInitializer {
             return "Событие скрыто";
         }
 
-        MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
-        String last = previous == null
+        String previousDescription = lastTriggeredEventDescriptions.get(player.getUUID());
+        String last = previousDescription == null
             ? "Последнее событие: ещё не было"
-            : "Последнее событие: " + previous.displayName();
+            : "Последнее событие: " + previousDescription;
 
         if (previewMode) {
             MinuteEvent selected = upcomingSelected.get(player.getUUID());
@@ -490,8 +490,8 @@ public final class MinuteEventsMod implements ModInitializer {
         upcomingSelected.remove(player.getUUID());
         int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
         badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
-        lastTriggeredEvents.put(player.getUUID(), event);
         String description = event.apply(player);
+        lastTriggeredEventDescriptions.put(player.getUUID(), description);
         if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
             ServerPlayNetworking.send(player, new EventNotificationPayload(description));
         } else {
