@@ -211,7 +211,7 @@ public final class MinuteEventsMod implements ModInitializer {
                     .append(String.format(java.util.Locale.forLanguageTag("ru-RU"), "%.1f%%", candidate.percent(totalWeight)));
             }
             MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
-            if (previous != null) display.append("\\nПоследнее событие: ").append(previous.displayName());
+            if (previous != null) display.append("\nПоследнее событие: ").append(previous.displayName());
             return display.toString();
         }
         MinuteEvent selected = upcomingSelected.get(player.getUUID());
@@ -221,7 +221,7 @@ public final class MinuteEventsMod implements ModInitializer {
         }
         MinuteEvent previous = lastTriggeredEvents.get(player.getUUID());
         String last = previous == null ? "Последнее событие: ещё не было" : "Последнее событие: " + previous.displayName();
-        return last + "\\n" + (selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName());
+        return last + "\n" + (selected == null ? "Следующее событие определяется..." : "Следующее событие: " + selected.displayName());
     }
 
     private double eventChance(MinuteEvent event, int badStreak) {
