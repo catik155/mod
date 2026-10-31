@@ -154,42 +154,42 @@ enum MinuteEvent {
     TNT_MINEFIELD(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = triggerExplosion(player, 3, 6);
+            int n = triggerExplosion(player, 2, 3);
             return n > 0 ? "Мина активирована! TNT уже тикает рядом с вами!" : "Не удалось установить TNT-ловушку.";
         }
     },
     MAGMA_MINEFIELD(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = placeFloorTrap(player, 5, 9, Blocks.MAGMA_BLOCK.defaultBlockState());
+            int n = placeFloorTrap(player, 1, 2, Blocks.MAGMA_BLOCK.defaultBlockState());
             return n > 0 ? "Магмовая мина: не наступайте на раскалённые блоки!" : "Магмовую ловушку установить не удалось.";
         }
     },
     WEB_PITFALL(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = placeFloorTrap(player, 3, 6, Blocks.COBWEB.defaultBlockState());
+            int n = placeFloorTrap(player, 1, 2, Blocks.COBWEB.defaultBlockState());
             return n > 0 ? "Паучья яма! Пол вокруг вас затянуло паутиной." : "Паучью ловушку установить не удалось.";
         }
     },
     FIRE_RING_TRAP(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = placeFloorTrap(player, 4, 7, Blocks.CAMPFIRE.defaultBlockState());
+            int n = placeFloorTrap(player, 1, 2, Blocks.CAMPFIRE.defaultBlockState());
             return n > 0 ? "Огненное кольцо вспыхнуло рядом! Не наступайте в костры." : "Огненную ловушку установить не удалось.";
         }
     },
     SOUL_FIRE_TRAP(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = placeFloorTrap(player, 5, 8, Blocks.SOUL_CAMPFIRE.defaultBlockState());
+            int n = placeFloorTrap(player, 1, 2, Blocks.SOUL_CAMPFIRE.defaultBlockState());
             return n > 0 ? "Ловушка синего пламени окружает вас!" : "Ловушку душ установить не удалось.";
         }
     },
     LIGHTNING_MINE(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            BlockPos site = randomSurfacePosition(player, 4, 8);
+            BlockPos site = randomSurfacePosition(player, 2, 3);
             var bolt = EntityType.LIGHTNING_BOLT.spawn(player.serverLevel(), site, MobSpawnType.EVENT);
             return bolt == null ? "Молниевую ловушку не удалось активировать." : "Молниеносная ловушка ударила рядом!";
         }
@@ -386,7 +386,7 @@ enum MinuteEvent {
     REMOTE_TNT_AMBUSH(EventCategory.TRAPS) {
         @Override
         String apply(ServerPlayer player) {
-            int n = triggerExplosion(player, 6, 10);
+            int n = triggerExplosion(player, 2, 4);
             return n > 0 ? "Дальняя TNT-засада активирована!" : "Не удалось запустить взрывную засаду.";
         }
     },
@@ -949,7 +949,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_004(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 7); return "Взрывная ловушка сработала неподалёку!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Взрывная ловушка сработала неподалёку!"; }
     },
     EXTRA_CATASTROPHE_005(EventCategory.OTHER) {
         @Override
@@ -969,7 +969,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_009(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Магмовая ловушка появилась рядом!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Магмовая ловушка появилась рядом!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_010(EventCategory.OTHER) {
         @Override
@@ -989,7 +989,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_014(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return n > 0 ? "На земле заложена взрывная ловушка!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return n > 0 ? "На земле заложена взрывная ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_015(EventCategory.OTHER) {
         @Override
@@ -1009,7 +1009,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_019(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 5, 9); return "Мощный взрыв прогремел рядом!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Мощный взрыв прогремел рядом!"; }
     },
     EXTRA_CATASTROPHE_020(EventCategory.OTHER) {
         @Override
@@ -1049,7 +1049,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_029(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.CAMPFIRE.defaultBlockState()); return n > 0 ? "На земле вспыхнула огненная ловушка!" : "Огненная ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.CAMPFIRE.defaultBlockState()); return n > 0 ? "На земле вспыхнула огненная ловушка!" : "Огненная ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_030(EventCategory.OTHER) {
         @Override
@@ -1069,7 +1069,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_034(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return "Серия взрывов прогремела неподалёку!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Серия взрывов прогремела неподалёку!"; }
     },
     EXTRA_CATASTROPHE_035(EventCategory.OTHER) {
         @Override
@@ -1089,7 +1089,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_039(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.COBWEB.defaultBlockState()); return n > 0 ? "Липкая паутина перекрыла путь!" : "Паутина не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.COBWEB.defaultBlockState()); return n > 0 ? "Липкая паутина перекрыла путь!" : "Паутина не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_040(EventCategory.OTHER) {
         @Override
@@ -1109,7 +1109,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_044(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 6); return "Сюрприз! Рядом сработала TNT-ловушка!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Сюрприз! Рядом сработала TNT-ловушка!"; }
     },
     EXTRA_CATASTROPHE_045(EventCategory.OTHER) {
         @Override
@@ -1129,7 +1129,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_049(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Магмовые плиты стали опасной ловушкой!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Магмовые плиты стали опасной ловушкой!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_050(EventCategory.OTHER) {
         @Override
@@ -1149,7 +1149,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_054(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 6, 10); return "Далёкий грохот — мощный взрыв рядом!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 4); return "Далёкий грохот — мощный взрыв рядом!"; }
     },
     EXTRA_CATASTROPHE_055(EventCategory.OTHER) {
         @Override
@@ -1169,7 +1169,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_059(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return n > 0 ? "Под ногами спрятана TNT-ловушка!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return n > 0 ? "Под ногами спрятана TNT-ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_060(EventCategory.OTHER) {
         @Override
@@ -1209,7 +1209,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_069(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 5, 9); return "Взрыв разметал блоки поблизости!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Взрыв разметал блоки поблизости!"; }
     },
     EXTRA_CATASTROPHE_070(EventCategory.OTHER) {
         @Override
@@ -1229,7 +1229,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_074(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.CAMPFIRE.defaultBlockState()); return n > 0 ? "Огненная западня появилась рядом!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.CAMPFIRE.defaultBlockState()); return n > 0 ? "Огненная западня появилась рядом!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_075(EventCategory.OTHER) {
         @Override
@@ -1249,7 +1249,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_079(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return "Взрывная волна прокатилась рядом!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Взрывная волна прокатилась рядом!"; }
     },
     EXTRA_CATASTROPHE_080(EventCategory.OTHER) {
         @Override
@@ -1269,7 +1269,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_084(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 4, 8, Blocks.COBWEB.defaultBlockState()); return n > 0 ? "Ловушка из паутины появилась рядом!" : "Паутина не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.COBWEB.defaultBlockState()); return n > 0 ? "Ловушка из паутины появилась рядом!" : "Паутина не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_085(EventCategory.OTHER) {
         @Override
@@ -1289,7 +1289,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_089(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 7); return "БА-БАХ! Взрыв прогремел рядом!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "БА-БАХ! Взрыв прогремел рядом!"; }
     },
     EXTRA_CATASTROPHE_090(EventCategory.OTHER) {
         @Override
@@ -1309,7 +1309,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_094(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 3, 7, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Пол раскалился — магмовая ловушка!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = placeFloorTrap(player, 1, 2, Blocks.MAGMA_BLOCK.defaultBlockState()); return n > 0 ? "Пол раскалился — магмовая ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_095(EventCategory.OTHER) {
         @Override
@@ -1329,7 +1329,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_099(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 6, 10); return "Большой взрыв прогремел неподалёку!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 4); return "Большой взрыв прогремел неподалёку!"; }
     },
     EXTRA_CATASTROPHE_100(EventCategory.OTHER) {
         @Override
@@ -1349,7 +1349,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_104(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 4, 8); return n > 0 ? "Обнаружена TNT-ловушка!" : "Ловушка не смогла появиться."; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return n > 0 ? "Обнаружена TNT-ловушка!" : "Ловушка не смогла появиться."; }
     },
     EXTRA_CATASTROPHE_105(EventCategory.CAGES) {
         @Override
@@ -1381,7 +1381,7 @@ enum MinuteEvent {
     },
     EXTRA_CATASTROPHE_112(EventCategory.TRAPS) {
         @Override
-        String apply(ServerPlayer player) { int n = triggerExplosion(player, 3, 7); return "Цепная взрывная ловушка сработала рядом!"; }
+        String apply(ServerPlayer player) { int n = triggerExplosion(player, 2, 3); return "Цепная взрывная ловушка сработала рядом!"; }
     },
     EXTRA_CATASTROPHE_113(EventCategory.MOBS) {
         @Override
