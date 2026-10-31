@@ -2481,17 +2481,19 @@ enum MinuteEvent {
         ServerLevel level = player.serverLevel();
         int chunkX = center.getX() >> 4;
         int chunkZ = center.getZ() >> 4;
+        int minX = chunkX << 4;
+        int minZ = chunkZ << 4;
         int changed = 0;
-        for (int dx = -radius; dx <= radius; dx++) {
-            for (int dz = -radius; dz <= radius; dz++) {
-                if (pattern == 1 && ThreadLocalRandom.current().nextInt(100) < 25) continue;
-                if (pattern == 2 && ((dx + dz) & 1) != 0) continue;
-                int x = center.getX() + dx;
-                int z = center.getZ() + dz;
-                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
-                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
+
+        // Transform every surface column in the selected 16x16 chunk.
+        for (int x = minX; x < minX + 16; x++) {
+            for (int z = minZ; z < minZ + 16; z++) {
+                BlockPos ground = level.getHeightmapPos(
+                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    new BlockPos(x, center.getY(), z)
+                ).below();
                 BlockState old = level.getBlockState(ground);
-                if (!isNaturalChunkTerrain(old) || old.is(replacement.getBlock())) continue;
+                if (old.isAir() || old.hasBlockEntity() || old.is(replacement.getBlock())) continue;
                 if (level.setBlock(ground, replacement, 3)) changed++;
             }
         }
@@ -2502,16 +2504,21 @@ enum MinuteEvent {
         ServerLevel level = player.serverLevel();
         int chunkX = center.getX() >> 4;
         int chunkZ = center.getZ() >> 4;
+        int minX = chunkX << 4;
+        int minZ = chunkZ << 4;
         int removed = 0;
-        for (int dx = -radius; dx <= radius && removed < limit; dx++) {
-            for (int dz = -radius; dz <= radius && removed < limit; dz++) {
-                int x = center.getX() + dx;
-                int z = center.getZ() + dz;
-                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
-                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
-                for (int dy = 0; dy < depth && removed < limit; dy++) {
+
+        // Apply the full requested depth to all 256 columns; no small block cap.
+        for (int x = minX; x < minX + 16; x++) {
+            for (int z = minZ; z < minZ + 16; z++) {
+                BlockPos ground = level.getHeightmapPos(
+                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    new BlockPos(x, center.getY(), z)
+                ).below();
+                for (int dy = 0; dy < depth; dy++) {
                     BlockPos target = ground.below(dy);
-                    if (!isNaturalChunkTerrain(level.getBlockState(target))) break;
+                    BlockState state = level.getBlockState(target);
+                    if (state.isAir() || state.hasBlockEntity()) break;
                     if (level.destroyBlock(target, false, player)) removed++;
                 }
             }
@@ -2523,15 +2530,22 @@ enum MinuteEvent {
         ServerLevel level = player.serverLevel();
         int chunkX = center.getX() >> 4;
         int chunkZ = center.getZ() >> 4;
+        int minX = chunkX << 4;
+        int minZ = chunkZ << 4;
         int placed = 0;
-        for (int dx = -radius; dx <= radius; dx++) {
-            for (int dz = -radius; dz <= radius; dz++) {
-                int x = center.getX() + dx;
-                int z = center.getZ() + dz;
-                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
-                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, center.getY(), z)).below();
+
+        // Flood the entire top layer of the selected chunk.
+        for (int x = minX; x < minX + 16; x++) {
+            for (int z = minZ; z < minZ + 16; z++) {
+                BlockPos ground = level.getHeightmapPos(
+                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    new BlockPos(x, center.getY(), z)
+                ).below();
                 BlockPos waterPos = ground.above();
-                if (level.getBlockState(waterPos).isAir() && level.setBlock(waterPos, Blocks.WATER.defaultBlockState(), 3)) placed++;
+                if (level.getBlockState(waterPos).isAir()
+                    && level.setBlock(waterPos, Blocks.WATER.defaultBlockState(), 3)) {
+                    placed++;
+                }
             }
         }
         return placed;
