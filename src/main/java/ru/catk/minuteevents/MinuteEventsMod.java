@@ -48,6 +48,7 @@ public final class MinuteEventsMod implements ModInitializer {
     private boolean previewMode = false;
     private boolean blindMode = false;
     private boolean timerVisible = true;
+    private boolean sharedEvents = false;
     private final Map<UUID, java.util.List<EventCandidate>> upcomingCandidates = new HashMap<>();
     private final Map<UUID, MinuteEvent> upcomingSelected = new HashMap<>();
     private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
@@ -73,6 +74,30 @@ public final class MinuteEventsMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(
             EventTimerPayload.TYPE,
             EventTimerPayload.CODEC
+        );
+        PayloadTypeRegistry.playC2S().register(
+            MultiplayerModePayload.TYPE,
+            MultiplayerModePayload.CODEC
+        );
+        ServerPlayNetworking.registerGlobalReceiver(
+            MultiplayerModePayload.TYPE,
+            (payload, context) -> context.server().execute(() -> {
+                ServerPlayer player = context.player();
+                if (!player.hasPermissions(2)) {
+                    player.displayClientMessage(Component.literal("Выбор режима доступен только хосту мира."), true);
+                    return;
+                }
+                sharedEvents = payload.sharedEvents();
+                upcomingCandidates.clear();
+                upcomingSelected.clear();
+                String modeName = sharedEvents ? "Одно событие для всех" : "У каждого игрока своё событие";
+                player.displayClientMessage(Component.literal("Режим LAN событий: " + modeName + "."), true);
+                for (ServerPlayer online : context.server().getPlayerList().getPlayers()) {
+                    if (online != player) {
+                        online.displayClientMessage(Component.literal("Хост выбрал режим: " + modeName + "."), true);
+                    }
+                }
+            })
         );
         registerCommands();
 
@@ -399,23 +424,64 @@ public final class MinuteEventsMod implements ModInitializer {
     }
 
     private void triggerEvents(MinecraftServer server) {
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+        java.util.List<ServerPlayer> players = server.getPlayerList().getPlayers();
+        if (sharedEvents && !players.isEmpty()) {
+            boolean forceGoodForGroup = players.stream()
+                .anyMatch(player -> badEventStreaks.getOrDefault(player.getUUID(), 0) >= 3);
+            MinuteEvent sharedEvent = chooseSharedEvent(players.get(0), forceGoodForGroup);
+            for (ServerPlayer player : players) {
+                applyEventToPlayer(player, sharedEvent);
+            }
+            return;
+        }
+
+        for (ServerPlayer player : players) {
             java.util.List<EventCandidate> candidates = candidatesFor(player);
             MinuteEvent event = upcomingSelected.get(player.getUUID());
             if (event == null) {
                 event = chooseWeightedCandidate(candidates);
             }
-            upcomingCandidates.remove(player.getUUID());
-            upcomingSelected.remove(player.getUUID());
-            int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
-            badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
-            lastTriggeredEvents.put(player.getUUID(), event);
-            String description = event.apply(player);
-            if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
-                ServerPlayNetworking.send(player, new EventNotificationPayload(description));
-            } else {
-                player.displayClientMessage(Component.literal("[Минутное событие] " + description), true);
+            applyEventToPlayer(player, event);
+        }
+    }
+
+    private MinuteEvent chooseSharedEvent(ServerPlayer host, boolean forceGood) {
+        java.util.EnumSet<MinuteEvent> chosen = java.util.EnumSet.noneOf(MinuteEvent.class);
+        int attempts = 0;
+        while (chosen.size() < 10 && attempts++ < 1000) {
+            MinuteEvent candidate = forceGood ? MinuteEvent.randomGoodEvent() : selectEvent();
+            String name = candidate.name();
+            if (name.startsWith("NETHER_") || name.startsWith("END_")) {
+                continue;
             }
+            if (!forceGood || candidate.isGood()) {
+                chosen.add(candidate);
+            }
+        }
+        if (chosen.isEmpty()) {
+            return forceGood ? MinuteEvent.randomGoodEvent() : selectEvent();
+        }
+        java.util.ArrayList<EventCandidate> weighted = new java.util.ArrayList<>();
+        for (MinuteEvent candidate : chosen) {
+            int weight = ThreadLocalRandom.current().nextInt(1, 101);
+            if (candidate.isLargeScale()) weight *= 3;
+            if (!candidate.isGood()) weight = (int) Math.ceil(weight * 1.03);
+            weighted.add(new EventCandidate(candidate, weight));
+        }
+        return chooseWeightedCandidate(weighted);
+    }
+
+    private void applyEventToPlayer(ServerPlayer player, MinuteEvent event) {
+        upcomingCandidates.remove(player.getUUID());
+        upcomingSelected.remove(player.getUUID());
+        int streak = badEventStreaks.getOrDefault(player.getUUID(), 0);
+        badEventStreaks.put(player.getUUID(), event.isGood() ? 0 : streak + 1);
+        lastTriggeredEvents.put(player.getUUID(), event);
+        String description = event.apply(player);
+        if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
+            ServerPlayNetworking.send(player, new EventNotificationPayload(description));
+        } else {
+            player.displayClientMessage(Component.literal("[Минутное событие] " + description), true);
         }
     }
 
