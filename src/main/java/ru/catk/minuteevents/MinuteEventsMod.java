@@ -100,6 +100,45 @@ public final class MinuteEventsMod implements ModInitializer {
                 }
             })
         );
+        PayloadTypeRegistry.playC2S().register(
+            GameplaySettingsPayload.TYPE,
+            GameplaySettingsPayload.CODEC
+        );
+        ServerPlayNetworking.registerGlobalReceiver(
+            GameplaySettingsPayload.TYPE,
+            (payload, context) -> context.server().execute(() -> {
+                ServerPlayer host = context.player();
+                if (!host.hasPermissions(2)) {
+                    host.displayClientMessage(Component.literal("Настройки игрового процесса доступны только хосту."), true);
+                    return;
+                }
+                int sum = payload.blocksChance() + payload.cagesChance() + payload.trapsChance() + payload.mobsChance();
+                if (payload.intervalSeconds() < MIN_INTERVAL_SECONDS || payload.intervalSeconds() > MAX_INTERVAL_SECONDS
+                    || payload.blocksChance() < 0 || payload.blocksChance() > 100
+                    || payload.cagesChance() < 0 || payload.cagesChance() > 100
+                    || payload.trapsChance() < 0 || payload.trapsChance() > 100
+                    || payload.mobsChance() < 0 || payload.mobsChance() > 100 || sum > 100) {
+                    host.displayClientMessage(Component.literal("Некорректные настройки: интервал 10–3600 сек., сумма шансов категорий не больше 100%."), true);
+                    return;
+                }
+                enabled = payload.enabled();
+                intervalSeconds = payload.intervalSeconds();
+                sharedEvents = payload.sharedEvents();
+                categoryEnabled.put(EventCategory.BLOCKS, payload.blocks());
+                categoryEnabled.put(EventCategory.CAGES, payload.cages());
+                categoryEnabled.put(EventCategory.TRAPS, payload.traps());
+                categoryEnabled.put(EventCategory.MOBS, payload.mobs());
+                categoryChances.put(EventCategory.BLOCKS, payload.blocksChance());
+                categoryChances.put(EventCategory.CAGES, payload.cagesChance());
+                categoryChances.put(EventCategory.TRAPS, payload.trapsChance());
+                categoryChances.put(EventCategory.MOBS, payload.mobsChance());
+                elapsedTicks = 0;
+                upcomingCandidates.clear();
+                upcomingSelected.clear();
+                boolean saved = saveConfig();
+                host.displayClientMessage(Component.literal("Настройки игрового процесса применены." + persistenceNote(saved)), true);
+            })
+        );
         registerCommands();
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
