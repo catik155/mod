@@ -431,16 +431,16 @@ public final class MinuteEventsMod implements ModInitializer {
             int attempts = 0;
             while (chosen.size() < 10 && attempts++ < 500) {
                 MinuteEvent candidate;
-                if (forceGood) {
+                if (player.serverLevel().dimension() == Level.NETHER) {
+                    candidate = randomNetherEvent(player);
+                    if (forceGood && !candidate.isGood()) continue;
+                } else if (player.serverLevel().dimension() == Level.END) {
+                    candidate = randomEndEvent(player);
+                    if (forceGood && !candidate.isGood()) continue;
+                } else if (forceGood) {
                     candidate = MinuteEvent.randomGoodEvent();
                 } else if (ThreadLocalRandom.current().nextInt(100) < 10) {
-                    if (player.serverLevel().dimension() == Level.NETHER) {
-                        candidate = randomNetherEvent(player);
-                    } else if (player.serverLevel().dimension() == Level.END) {
-                        candidate = randomEndEvent(player);
-                    } else {
-                        candidate = randomOverworldEvent(player);
-                    }
+                    candidate = randomOverworldEvent(player);
                 } else {
                     candidate = selectEvent();
                 }
