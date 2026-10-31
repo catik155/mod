@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -100,6 +101,16 @@ public final class MinuteEventsMod implements ModInitializer {
             })
         );
         registerCommands();
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            sharedEvents = false;
+            upcomingCandidates.clear();
+            upcomingSelected.clear();
+            badEventStreaks.clear();
+            lastTriggeredEvents.clear();
+            elapsedTicks = 0;
+            timerSyncTicks = 0;
+        });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (!enabled || server.getPlayerList().getPlayers().isEmpty()) {
@@ -324,6 +335,7 @@ public final class MinuteEventsMod implements ModInitializer {
             () -> Component.literal("Минутные события " + status
                 + ". Интервал: " + intervalSeconds + " сек. До следующего: " + remaining + " сек."
                 + " Режим: " + (previewMode ? "предпросмотр" : blindMode ? "слепой" : "проценты")
+                + " LAN: " + (sharedEvents ? "одно событие для всех" : "каждому своё")
                 + " Категории: " + categoryStatus()),
             false
         );
