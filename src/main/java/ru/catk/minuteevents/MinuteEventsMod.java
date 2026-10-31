@@ -49,7 +49,6 @@ public final class MinuteEventsMod implements ModInitializer {
     private boolean blindMode = false;
     private boolean timerVisible = true;
     private final Map<UUID, MinuteEvent> upcomingEvents = new HashMap<>();
-    private final Map<UUID, Integer> badEventStreaks = new HashMap<>();
     private Path configPath;
     private final EnumMap<EventCategory, Boolean> categoryEnabled = defaultCategoryEnabled();
     private final EnumMap<EventCategory, Integer> categoryChances = defaultCategoryChances();
@@ -381,21 +380,21 @@ public final class MinuteEventsMod implements ModInitializer {
 
     private void triggerEvents(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            int badStreak = badEventStreaks.getOrDefault(player.getUUID(), 0);
             MinuteEvent event;
-            if (player.serverLevel().dimension() == Level.NETHER) {
-                event = badStreak >= 3 ? randomNetherGoodEvent() : randomNetherEvent(player);
-            } else if (player.serverLevel().dimension() == Level.END) {
-                event = badStreak >= 3 ? randomEndGoodEvent() : randomEndEvent(player);
+            // Специальные события измерений/биомов — редкая особенность места, а не постоянный пул.
+            // В остальных случаях выбирается обычное событие с учётом настроек категорий.
+            if (ThreadLocalRandom.current().nextInt(100) < 30) {
+                if (player.serverLevel().dimension() == Level.NETHER) {
+                    event = randomNetherEvent(player);
+                } else if (player.serverLevel().dimension() == Level.END) {
+                    event = randomEndEvent(player);
+                } else {
+                    event = randomOverworldEvent(player);
+                }
             } else {
-                event = badStreak >= 3 ? MinuteEvent.randomGoodEvent() : randomOverworldEvent(player);
+                event = selectEvent();
             }
             String description = event.apply(player);
-            if (event.isGood()) {
-                badEventStreaks.put(player.getUUID(), 0);
-            } else {
-                badEventStreaks.put(player.getUUID(), badStreak + 1);
-            }
             if (ServerPlayNetworking.canSend(player, EventNotificationPayload.TYPE)) {
                 ServerPlayNetworking.send(player, new EventNotificationPayload(description));
             } else {
