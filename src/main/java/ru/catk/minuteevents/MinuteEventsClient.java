@@ -12,7 +12,8 @@ import java.util.List;
 
 public final class MinuteEventsClient implements ClientModInitializer {
     private static final long DISPLAY_DURATION_NANOS = 7_000_000_000L;
-    private static final int PANEL_WIDTH = 340;
+    private static final int PANEL_WIDTH = 360;
+    private static final int DETAIL_WIDTH = 350;
 
     private static String currentMessage;
     private static long shownAtNanos;
@@ -49,21 +50,22 @@ public final class MinuteEventsClient implements ClientModInitializer {
         }
         if (timerVisible) {
             String timerText = String.format(java.util.Locale.ROOT, "%02d:%02d", secondsUntilEvent / 60, secondsUntilEvent % 60);
-            int timerWidth = client.font.width(timerText);
-            graphics.fill(8, 8, 8 + timerWidth + 12, 25, 0xB9161920);
-            graphics.drawString(client.font, timerText, 14, 13, 0xFFFFC66D, false);
+            int timerWidth = Math.max(112, client.font.width(timerText) + 48);
+            graphics.fill(7, 7, 7 + timerWidth, 31, 0xE8101724);
+            graphics.fill(7, 7, 9, 31, 0xFFFFB74A);
+            graphics.drawString(client.font, "ДО СОБЫТИЯ", 15, 11, 0xFFB8C7D9, false);
+            graphics.drawString(client.font, timerText, 15, 20, 0xFFFFD27A, false);
         }
         if (!timerDetail.isBlank()) {
-            List<FormattedCharSequence> detailLines = client.font.split(
-                Component.literal(timerDetail),
-                320
-            );
-            int detailHeight = Math.max(17, detailLines.size() * 10 + 8);
-            int detailWidth = Math.min(340, Math.max(120, detailLines.stream()
-                .mapToInt(client.font::width).max().orElse(120))) + 12;
-            graphics.fill(8, 29, 8 + detailWidth, 29 + detailHeight, 0xB9161920);
+            List<FormattedCharSequence> detailLines = client.font.split(Component.literal(timerDetail), DETAIL_WIDTH - 24);
+            int detailHeight = Math.max(24, detailLines.size() * 10 + 22);
+            int detailWidth = Math.min(DETAIL_WIDTH, Math.max(150, detailLines.stream().mapToInt(client.font::width).max().orElse(120) + 24));
+            int top = timerVisible ? 36 : 8;
+            graphics.fill(7, top, 7 + detailWidth, top + detailHeight, 0xE8101724);
+            graphics.fill(7, top, 7 + detailWidth, top + 2, 0xFF54D6A0);
+            graphics.drawString(client.font, "ХРОНИКА СОБЫТИЙ", 15, top + 7, 0xFF70DDB5, false);
             for (int i = 0; i < detailLines.size(); i++) {
-                graphics.drawString(client.font, detailLines.get(i), 14, 33 + i * 10, 0xFFFFFFFF, false);
+                graphics.drawString(client.font, detailLines.get(i), 15, top + 19 + i * 10, 0xFFF1F4F8, false);
             }
         }
         if (currentMessage == null) {
