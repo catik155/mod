@@ -2,6 +2,7 @@ package ru.catk.minuteevents;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,6 +21,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
     private static int secondsUntilEvent = 60;
     private static String timerDetail = "Шансы категорий";
     private static boolean timerVisible = true;
+    private static boolean promptedForLan = false;
 
     @Override
     public void onInitializeClient() {
@@ -36,6 +38,17 @@ public final class MinuteEventsClient implements ClientModInitializer {
             }
         );
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            var server = client.getSingleplayerServer();
+            if (server == null) {
+                promptedForLan = false;
+                return;
+            }
+            if (server.isPublished() && !promptedForLan && client.player != null) {
+                promptedForLan = true;
+                client.setScreen(new MultiplayerModeScreen(client.screen));
+            }
+        });
     }
 
     private static void show(String message) {
