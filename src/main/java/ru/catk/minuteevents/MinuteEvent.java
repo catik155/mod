@@ -2177,6 +2177,37 @@ enum MinuteEvent {
         return player.serverLevel().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, target);
     }
 
+    private static BlockPos randomMobSpawnPosition(ServerPlayer player, int minDistance, int maxDistance) {
+        ServerLevel level = player.serverLevel();
+        BlockPos playerPos = player.blockPosition();
+        int baseY = playerPos.getY();
+
+        // Ищем площадку рядом с высотой игрока, а не на самой верхней поверхности мира.
+        for (int attempt = 0; attempt < 12; attempt++) {
+            double angle = ThreadLocalRandom.current().nextDouble(0.0, Math.PI * 2.0);
+            int distance = ThreadLocalRandom.current().nextInt(minDistance, maxDistance + 1);
+            int x = playerPos.getX() + (int) Math.round(Math.cos(angle) * distance);
+            int z = playerPos.getZ() + (int) Math.round(Math.sin(angle) * distance);
+            int startY = Math.min(level.getMaxBuildHeight() - 2, baseY + 6);
+
+            for (int y = startY; y >= Math.max(level.getMinBuildHeight() + 1, baseY - 8); y--) {
+                BlockPos feet = new BlockPos(x, y, z);
+                BlockPos head = feet.above();
+                BlockPos floor = feet.below();
+                if (level.getBlockState(feet).isAir()
+                    && level.getBlockState(head).isAir()
+                    && level.getBlockState(feet).getFluidState().isEmpty()
+                    && level.getBlockState(head).getFluidState().isEmpty()
+                    && level.getBlockState(floor).isSolidRender(level, floor)) {
+                    return feet;
+                }
+            }
+        }
+
+        // Если рядом нет площадки, оставляем мобов на уровне игрока, а не переносим на вершину мира.
+        return playerPos.offset(0, 1, 0);
+    }
+
     private static int removeBlockBurst(
         ServerPlayer player,
         int minDistance,
@@ -2504,7 +2535,7 @@ enum MinuteEvent {
         int spawned = 0;
 
         for (int i = 0; i < amount; i++) {
-            BlockPos site = randomSurfacePosition(player, minDistance, maxDistance);
+            BlockPos site = randomMobSpawnPosition(player, minDistance, maxDistance);
             EntityType<?> type = types[ThreadLocalRandom.current().nextInt(types.length)];
             if (type.spawn(level, site, MobSpawnType.EVENT) != null) {
                 spawned++;
