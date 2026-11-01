@@ -46,7 +46,7 @@ public final class MultiplayerModeScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(0, 0, this.width, this.height, 0x66000000);
+        graphics.fill(0, 0, this.width, this.height, 0xFF101722);
         int center = this.width / 2;
         graphics.drawCenteredString(font, "МИНУТНЫЕ СОБЫТИЯ: LAN", center, this.height / 2 - 65, 0xFFFFC66D);
         graphics.drawCenteredString(font, "Как должны происходить события?", center, this.height / 2 - 43, 0xFFFFFFFF);
