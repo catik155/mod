@@ -47,11 +47,11 @@ public final class MultiplayerModeScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(0, 0, this.width, this.height, 0xFF101722);
+        super.render(graphics, mouseX, mouseY, partialTick);
         int center = this.width / 2;
         graphics.drawCenteredString(font, "МИНУТНЫЕ СОБЫТИЯ: LAN", center, this.height / 2 - 65, 0xFFFFC66D);
         graphics.drawCenteredString(font, "Как должны происходить события?", center, this.height / 2 - 43, 0xFFFFFFFF);
         graphics.drawCenteredString(font, "Общий режим: все игроки получают один и тот же тип события.", center, this.height / 2 + 58, 0xFFB8C7D9);
         graphics.drawCenteredString(font, "Личный режим: у каждого игрока свой выбор и последствия.", center, this.height / 2 + 72, 0xFFB8C7D9);
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
 }
