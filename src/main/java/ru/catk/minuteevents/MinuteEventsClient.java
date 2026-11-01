@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ public final class MinuteEventsClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(MinuteEventsClient::renderNotification);
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof PauseScreen) {
-                screen.addRenderableWidget(Button.builder(
+                Screens.getButtons(screen).add(Button.builder(
                     Component.literal("Настройки Minute Events"),
                     button -> client.setScreen(new MinuteEventsSettingsScreen(screen))
                 ).bounds(scaledWidth / 2 - 100, scaledHeight - 28, 200, 20).build());
