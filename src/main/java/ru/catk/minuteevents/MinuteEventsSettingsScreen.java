@@ -89,8 +89,8 @@ public final class MinuteEventsSettingsScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(0, 0, this.width, this.height, 0xFF101722);
+        super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(font, "НАСТРОЙКИ MINUTE EVENTS", this.width / 2, 20, 0xFFFFC66D);
         graphics.drawCenteredString(font, "Настройки доступны хосту мира", this.width / 2, 34, 0xFFB8C7D9);
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
 }
