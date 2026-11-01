@@ -2008,6 +2008,7 @@ enum MinuteEvent {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
             replaceChunkSurface(player, center, 6, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 4, 0, 0, 0);
             return "СКАЛКОВАЯ ИНФЕКЦИЯ! Заражение поглотило поверхность чанка!";
         }
     },
@@ -2085,6 +2086,7 @@ enum MinuteEvent {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
             replaceChunkSurface(player, center, 6, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 6, 0, 0, 0);
             return "СКАЛКОВОЕ РАСПРОСТРАНЕНИЕ! Заражение поглотило большую часть участка!";
         }
     },
@@ -2092,7 +2094,48 @@ enum MinuteEvent {
         @Override String apply(ServerPlayer player) {
             BlockPos center = randomChunkSurfacePosition(player);
             replaceChunkSurface(player, center, 7, Blocks.SCULK.defaultBlockState(), 1);
+            placeSculkFeatures(player, center, 8, 0, 0, 0);
             return "СКАЛКОВАЯ ЭПИДЕМИЯ! Скulk захватывает огромную площадь чанка!";
+        }
+    },
+    SCULK_CATALYST_GROVE(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            replaceChunkSurface(player, center, 5, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 10, 0, 0, 0);
+            return "РОЩА КАТАЛИЗАТОРОВ! Скалк и катализаторы захватили чанк!";
+        }
+    },
+    SCULK_SHRIEKER_RITUAL(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            replaceChunkSurface(player, center, 5, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 5, 3, 0, 0);
+            return "ЗОВ ХРАНИТЕЛЯ! Катализаторы и визгуны пробудили древнюю тьму!";
+        }
+    },
+    SCULK_SENSOR_WEB(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            replaceChunkSurface(player, center, 6, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 5, 0, 8, 0);
+            return "СЕТЬ СКАЛК-СЕНСОРОВ! Каждый шаг разносится по заражённому чанку!";
+        }
+    },
+    SCULK_CALIBRATED_GRID(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            replaceChunkSurface(player, center, 6, Blocks.SCULK.defaultBlockState(), 0);
+            placeSculkFeatures(player, center, 6, 0, 0, 6);
+            return "КАЛИБРОВАННАЯ СЕТЬ! Катализаторы и точные сенсоры покрыли чанк!";
+        }
+    },
+    SCULK_ANCIENT_OUTBREAK(EventCategory.BLOCKS) {
+        @Override String apply(ServerPlayer player) {
+            BlockPos center = randomChunkSurfacePosition(player);
+            replaceChunkSurface(player, center, 7, Blocks.SCULK.defaultBlockState(), 1);
+            placeSculkFeatures(player, center, 12, 4, 4, 0);
+            return "ДРЕВНЯЯ ЭПИДЕМИЯ! Катализаторы, сенсоры и визгуны заполонили чанк!";
         }
     },
     CHUNK_VOID_RIFT(EventCategory.BLOCKS) {
@@ -2173,6 +2216,11 @@ enum MinuteEvent {
             case HORSE_DELIVERY -> "Доставка лошадей";
             case CAT_VISIT -> "Котики пришли";
             case VILLAGER_MEETING -> "Собрание жителей";
+            case SCULK_CATALYST_GROVE -> "Роща катализаторов";
+            case SCULK_SHRIEKER_RITUAL -> "Зов хранителя";
+            case SCULK_SENSOR_WEB -> "Сеть сенсоров";
+            case SCULK_CALIBRATED_GRID -> "Точная сеть";
+            case SCULK_ANCIENT_OUTBREAK -> "Древняя эпидемия";
             default -> localizedFallbackName();
         };
     }
@@ -2498,6 +2546,30 @@ enum MinuteEvent {
             }
         }
         return changed;
+    }
+
+    private static void placeSculkFeatures(ServerPlayer player, BlockPos center, int catalysts,
+                                               int shriekers, int sensors, int calibratedSensors) {
+        ServerLevel level = player.serverLevel();
+        int chunkX = center.getX() >> 4;
+        int chunkZ = center.getZ() >> 4;
+        for (int i = 0; i < catalysts + shriekers + sensors + calibratedSensors; i++) {
+            int x = (chunkX << 4) + ThreadLocalRandom.current().nextInt(1, 15);
+            int z = (chunkZ << 4) + ThreadLocalRandom.current().nextInt(1, 15);
+            BlockPos surface = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(x, center.getY(), z));
+            BlockState feature;
+            if (i < catalysts) {
+                feature = Blocks.SCULK_CATALYST.defaultBlockState();
+            } else if (i < catalysts + shriekers) {
+                feature = Blocks.SCULK_SHRIEKER.defaultBlockState();
+            } else if (i < catalysts + shriekers + sensors) {
+                feature = Blocks.SCULK_SENSOR.defaultBlockState();
+            } else {
+                feature = Blocks.CALIBRATED_SCULK_SENSOR.defaultBlockState();
+            }
+            level.setBlock(surface, feature, 3);
+        }
     }
 
     private static int removeChunkSurface(ServerPlayer player, BlockPos center, int radius, int depth, int limit) {
